@@ -1,0 +1,43 @@
+@use '@angular/material' as mat;
+
+// === PALETAS PERSONALIZADAS ===
+$cafe-primary: (
+  0: #3e2723,
+  10: #4e342e,
+  20: #5d4037,
+  40: #6d4c41,
+  80: #a1887f,
+  90: #d7ccc8,
+  100: #efebe9,
+);
+
+$cafe-tertiary: (
+  20: #b9804d,
+  40: #c49a6c,
+  90: #ffe0b2,
+  100: #fff8e1,
+);
+
+// === TEMA DEFINIDO ===
+html {
+  @include mat.theme((
+    color: (
+      primary: $cafe-primary,
+      tertiary: $cafe-tertiary,
+    ),
+    typography: (
+      brand-family: 'Inter, Roboto, "Helvetica Neue", sans-serif',
+      plain-family: 'Inter, Roboto, "Helvetica Neue", sans-serif',
+    ),
+    density: 0,
+  ));
+}
+
+// === ESTILOS BASE ===
+body {
+  color-scheme: light;
+  background-color: var(--mat-sys-surface, #faf3ef);
+  color: var(--mat-sys-on-surface, #3e2723);
+  font: var(--mat-sys-body-medium);
+  margin: 0;
+}

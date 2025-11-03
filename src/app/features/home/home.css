@@ -1,0 +1,61 @@
+/* === HERO SECTION === */
+.hero {
+  background: linear-gradient(rgba(50, 30, 10, 0.7), rgba(50, 30, 10, 0.7)),
+    url('https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1600&q=80')
+      center/cover no-repeat;
+  min-height: 85vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero h1 {
+  color: #fff8f0;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero p {
+  color: #e0d3c2;
+}
+
+.btn-cta {
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  font-weight: 500;
+  border-radius: 9999px;
+  padding: 0.75rem 1.5rem;
+}
+
+/* === FEATURES SECTION === */
+.feature-icon {
+  font-size: 48px;
+  color: var(--mat-sys-primary);
+}
+
+.feature-card {
+  border: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 1rem;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.15);
+}
+
+/* === CTA SECTION === */
+.cta-section {
+  background: linear-gradient(135deg, #4e342e, #795548);
+}
+
+.cta-section button {
+  border-radius: 9999px;
+  border-color: #fff;
+  color: #fff;
+}
+
+.cta-section button:hover {
+  background-color: #fff;
+  color: #4e342e;
+}

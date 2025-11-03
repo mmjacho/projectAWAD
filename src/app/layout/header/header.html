@@ -1,0 +1,31 @@
+<mat-toolbar color="primary" class="mat-elevation-z6 toolbar-main px-3 py-2">
+  <div class="container-fluid d-flex justify-content-between align-items-center flex-wrap">
+
+    <!-- Branding -->
+    <div class="d-flex align-items-center brand">
+      <mat-icon class="me-2">local_cafe</mat-icon>
+      <span class="brand-name">{{ companyName() }}</span>
+    </div>
+
+    <!-- Desktop Nav -->
+    <div class="d-none d-md-flex align-items-center gap-3">
+      <button mat-button (click)="onAboutClick()">Acerca de</button>
+      <button mat-stroked-button color="accent" (click)="onLoginClick()">Iniciar Sesión</button>
+    </div>
+
+    <!-- Mobile Nav Trigger -->
+    <button mat-icon-button class="d-md-none" aria-label="Abrir menú" (click)="toggleMobileMenu()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+
+<!-- Mobile menu -->
+@if (mobileMenuOpen) {
+  <div class="mobile-menu bg-light border-top py-2 d-md-none">
+    <div class="container d-flex flex-column align-items-start gap-2">
+      <button mat-button color="primary" class="w-100 text-start" (click)="onAboutClick()">Acerca de</button>
+      <button mat-stroked-button color="accent" class="w-100 text-start" (click)="onLoginClick()">Iniciar Sesión</button>
+    </div>
+  </div>
+}

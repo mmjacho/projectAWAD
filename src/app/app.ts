@@ -1,20 +1,17 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Header } from './components/header/header';
-import { Footer } from './components/footer/footer';
+import { MainLayout } from "./layout/main-layout/main-layout";
+import { provideRouter } from '@angular/router';
+import { routes } from './app.routes';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, Footer],
-  template: `
-    <div class="d-flex flex-column min-vh-100">
-      <app-header />
-      <main class="flex-grow-1">
-        <router-outlet />
-      </main>
-      <app-footer />
-    </div>
-  `,
-  styles: []
+  imports: [ MainLayout],
+  templateUrl: './app.html',
+  styleUrl: './app.css'
 })
 export class App {}
+
+export const appConfig = {
+  providers: [provideRouter(routes)],
+};

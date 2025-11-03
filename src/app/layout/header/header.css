@@ -1,0 +1,52 @@
+.toolbar-main {
+  background: linear-gradient(135deg, #6d4c41, #8d6e63);
+  color: #fff;
+}
+
+.brand mat-icon {
+  color: #ffe0b2;
+  font-size: 28px;
+}
+
+.brand-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #fffdf8;
+}
+
+button[mat-button],
+button[mat-stroked-button] {
+  text-transform: none;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+button[mat-button]:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+button[mat-stroked-button] {
+  border-color: #fff;
+  color: #fff;
+}
+
+button[mat-stroked-button]:hover {
+  background-color: #fff;
+  color: #5d4037;
+}
+
+.mobile-menu {
+  animation: fadeDown 0.3s ease;
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
