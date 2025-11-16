@@ -14,6 +14,13 @@ export const routes: Routes = [
     pathMatch: 'full'
   }*/
   { path: 'login', component: Login },
-  { path: '', component: Home, canActivate: [authGuard] },
-  { path: '**', redirectTo: '' }
+ 
+  // 👉 Por defecto redirigimos a login
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  
+   // 👉 Home solo se puede entrar si está logueado
+  { path: 'home', component: Home, canActivate: [authGuard] },
+  
+  // 👉 cualquier ruta desconocida vuelve a login
+  { path: '**', redirectTo: '/login' }
 ];

@@ -50,3 +50,78 @@ button[mat-stroked-button]:hover {
     transform: translateY(0);
   }
 }
+
+/* CONVERSAMOS: Tu estilo original SE MANTIENE */
+.toolbar-main {
+  background: linear-gradient(135deg, #6d4c41, #8d6e63);
+  color: #fff;
+}
+
+/* === RIBBON (Nivel 1) === */
+.ribbon {
+  background: var(--mat-sys-surface);
+  border-bottom: 1px solid #d7ccc8;
+  gap: 1rem;
+}
+
+/* Botones nivel 1 */
+.ribbon-btn {
+  color: var(--mat-sys-on-surface) !important;
+  font-weight: 600;
+  text-transform: none;
+}
+
+/* Contenedor de módulos */
+.ribbon-item {
+  position: relative;
+}
+
+/* === SUBMENÚ Nivel 2 === */
+.submenu {
+  position: absolute;
+  top: 42px;
+  left: 0;
+  background: linear-gradient(135deg, #6d4c41, #8d6e63);
+  border: 1px solid #d7ccc8;
+  min-width: auto;
+  border-radius: 10px;
+  list-style: none;
+  padding: 8px 0;
+  margin: 0;
+  z-index: 1000;
+}
+
+.submenu-item {
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--mat-sys-on-surface, #3e2723);
+  font-weight: 500;
+}
+
+.submenu-item mat-icon {
+  color: #fffdf8; /* o var(--mat-sys-on-primary) si prefieres */
+}
+
+.submenu-item:hover {
+  background: rgba(217, 212, 210, 0.304);
+}
+
+/* Flecha */
+.arrow {
+  opacity: 0.6;
+}
+
+/* === SUBMENÚ Nivel 3 === */
+.level3 {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background: linear-gradient(135deg, #6d4c41, #8d6e63);
+  border: 1px solid #d7ccc8;
+  border-radius: 8px;
+  min-width: 220px;
+  padding: 6px 0;
+  z-index: 1001;
+}
