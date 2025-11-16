@@ -26,6 +26,7 @@ export class Header {
 
   hoverLevel1: string | null = null;
   hoverLevel2: string | null = null;
+  hoverLevel3: string | null = null; // <-- NUEVA LÍNEA
 
   readonly companyName = signal('AgroCafé Admin');
 
@@ -60,6 +61,7 @@ export class Header {
     this.router.navigate([route]);
     this.hoverLevel1 = null;
     this.hoverLevel2 = null;
+    this.hoverLevel3 = null; // <-- NUEVA LÍNEA
   }
 
   // ===============================
