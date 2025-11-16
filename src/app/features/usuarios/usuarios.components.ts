@@ -66,6 +66,7 @@ export class UsuariosComponent {
   openDialog(usuario?: Usuario): void {
     const dialogRef = this.dialog.open(UsuarioDialogComponent, {
       width: '450px',
+      panelClass: 'dialog-cafe',
       data: usuario ? { ...usuario } : null, // Pasa una copia para evitar mutaciones
     });
 
