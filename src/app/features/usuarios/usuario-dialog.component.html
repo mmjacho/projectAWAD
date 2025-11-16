@@ -1,0 +1,55 @@
+<h2 mat-dialog-title>{{ data ? 'Modificar Usuario' : 'Crear Usuario' }}</h2>
+
+<mat-dialog-content [formGroup]="usuarioForm">
+  <div class="d-flex flex-column gap-2">
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre" required>
+      @if (usuarioForm.get('nombre')?.hasError('required')) {
+        <mat-error>El nombre es requerido</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Apellido</mat-label>
+      <input matInput formControlName="apellido" required>
+       @if (usuarioForm.get('apellido')?.hasError('required')) {
+        <mat-error>El apellido es requerido</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" required>
+      @if (usuarioForm.get('email')?.hasError('required')) {
+        <mat-error>El email es requerido</mat-error>
+      }
+      @if (usuarioForm.get('email')?.hasError('email')) {
+        <mat-error>Email inválido</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Rol</mat-label>
+      <mat-select formControlName="rol" required>
+        @for (rol of roles; track rol) {
+          <mat-option [value]="rol">{{ rol }}</mat-option>
+        }
+      </mat-select>
+       @if (usuarioForm.get('rol')?.hasError('required')) {
+        <mat-error>El rol es requerido</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-slide-toggle formControlName="activo">
+      Usuario Activo
+    </mat-slide-toggle>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="usuarioForm.invalid">
+    {{ data ? 'Actualizar' : 'Guardar' }}
+  </button>
+</mat-dialog-actions>

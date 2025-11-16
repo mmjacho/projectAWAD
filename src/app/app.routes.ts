@@ -20,6 +20,19 @@ export const routes: Routes = [
   
    // 👉 Home solo se puede entrar si está logueado
   { path: 'home', component: Home, canActivate: [authGuard] },
+
+  // --- RUTAS NUEVAS AÑADIDAS ---
+  { 
+    path: 'usuarios', 
+    loadComponent: () => import('./features/usuarios/usuarios.components').then(m => m.UsuariosComponent),
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'clientes', 
+    loadComponent: () => import('./features/clientes/clientes.component').then(m => m.ClientesComponent),
+    canActivate: [authGuard] 
+  },
+  // --- FIN RUTAS NUEVAS ---
   
   // 👉 cualquier ruta desconocida vuelve a login
   { path: '**', redirectTo: '/login' }
