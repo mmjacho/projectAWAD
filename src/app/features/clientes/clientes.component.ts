@@ -59,6 +59,7 @@ export class ClientesComponent {
   openDialog(cliente?: Cliente): void {
     const dialogRef = this.dialog.open(ClienteDialogComponent, {
       width: '450px',
+      panelClass: 'dialog-cafe',
       data: cliente ? { ...cliente } : null,
     });
 

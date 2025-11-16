@@ -41,3 +41,91 @@ body {
   font: var(--mat-sys-body-medium);
   margin: 0;
 }
+
+/* ===========================================================
+   DIALOGOS AGROCAFE (M3 + TEMA CAFE)
+   =========================================================== */
+
+.dialog-cafe .mat-mdc-dialog-container {
+  background: whitesmoke;//var(--mat-sys-surface, white) !important;
+  color: var(--mat-sys-on-surface) !important;
+  border-radius: 16px !important;
+  padding: 0 !important;
+
+  // sombra cálida (no negra)
+  box-shadow:
+    0 4px 16px rgba(62, 39, 35, 0.25),
+    0 8px 28px rgba(62, 39, 35, 0.20) !important;
+
+  animation: dialogFadeIn 0.25s ease-out;
+}
+
+/* Título */
+.dialog-cafe h2[mat-dialog-title] {
+  padding: 1rem 1.5rem;
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+  background: var(--mat-sys-surface-container, #faf3ef);
+  color: var(--mat-sys-on-surface);
+  border-bottom: 1px solid var(--mat-sys-outline-variant, #d7ccc8);
+}
+
+/* Contenido */
+.dialog-cafe mat-dialog-content {
+  padding: 1.4rem 1.5rem !important;
+}
+
+/* Form fields */
+.dialog-cafe .mat-mdc-form-field {
+  width: 100%;
+}
+
+.dialog-cafe .mat-mdc-form-field-appearance-outline
+  .mdc-notched-outline__leading,
+.dialog-cafe .mat-mdc-form-field-appearance-outline
+  .mdc-notched-outline__trailing {
+  border-color: var(--mat-sys-primary, #6d4c41) !important;
+}
+
+/* focus */
+.dialog-cafe .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+.dialog-cafe .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: var(--mat-sys-primary) !important;
+}
+
+/* Action buttons */
+.dialog-cafe .mat-mdc-dialog-actions {
+  padding: 1rem 1.5rem !important;
+  border-top: 1px solid var(--mat-sys-outline-variant, #d7ccc8);
+}
+
+.dialog-cafe button[mat-button] {
+  color: var(--mat-sys-primary);
+  font-weight: 500;
+}
+
+.dialog-cafe button[mat-flat-button] {
+  border-radius: 8px;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  font-weight: 600;
+
+  transition: background 0.2s ease-in-out;
+}
+
+.dialog-cafe button[mat-flat-button]:hover {
+  background-color: var(--mat-sys-primary-dark, #4e342e);
+}
+
+/* Animación */
+@keyframes dialogFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
