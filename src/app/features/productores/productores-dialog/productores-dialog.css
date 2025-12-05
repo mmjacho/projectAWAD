@@ -1,0 +1,19 @@
+.w-100 {
+    width: 100%;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -0.5rem;
+    margin-left: -0.5rem;
+}
+
+.g-2 {
+    gap: 0.5rem;
+}
+
+.col-md-6 {
+    flex: 0 0 auto;
+    width: 48%;
+}

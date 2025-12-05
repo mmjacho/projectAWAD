@@ -1,0 +1,81 @@
+<h2 mat-dialog-title>{{ data ? 'Modificar Productor' : 'Nuevo Productor' }}</h2>
+
+    <mat-dialog-content [formGroup]="productorForm">
+      <div class="d-flex flex-column gap-2">
+        
+        <!-- Fila 1: Identificación -->
+        <div class="row g-2">
+            <div class="col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Cédula / RUC</mat-label>
+                  <input matInput formControlName="cedula" required>
+                  <mat-icon matSuffix>badge</mat-icon>
+                  @if (productorForm.get('cedula')?.hasError('required')) {
+                    <mat-error>La cédula es requerida</mat-error>
+                  }
+                </mat-form-field>
+            </div>
+            <div class="col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Teléfono</mat-label>
+                  <input matInput formControlName="telefono" required>
+                  <mat-icon matSuffix>phone</mat-icon>
+                  @if (productorForm.get('telefono')?.hasError('required')) {
+                    <mat-error>Requerido</mat-error>
+                  }
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- Fila 2: Nombres -->
+        <div class="row g-2">
+            <div class="col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Nombre</mat-label>
+                  <input matInput formControlName="nombre" required>
+                  @if (productorForm.get('nombre')?.hasError('required')) {
+                    <mat-error>Requerido</mat-error>
+                  }
+                </mat-form-field>
+            </div>
+            <div class="col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Apellido</mat-label>
+                  <input matInput formControlName="apellido" required>
+                  @if (productorForm.get('apellido')?.hasError('required')) {
+                    <mat-error>Requerido</mat-error>
+                  }
+                </mat-form-field>
+            </div>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" placeholder="opcional@ejemplo.com">
+          <mat-icon matSuffix>email</mat-icon>
+          @if (productorForm.get('email')?.hasError('email')) {
+            <mat-error>Email inválido</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Dirección de Domicilio</mat-label>
+          <input matInput formControlName="direccion" required>
+          <mat-icon matSuffix>location_on</mat-icon>
+          @if (productorForm.get('direccion')?.hasError('required')) {
+            <mat-error>La dirección es requerida</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-slide-toggle formControlName="activo">
+          Productor Activo
+        </mat-slide-toggle>
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="onCancel()">Cancelar</button>
+      <button mat-flat-button color="primary" (click)="onSave()" [disabled]="productorForm.invalid">
+        {{ data ? 'Actualizar' : 'Guardar' }}
+      </button>
+    </mat-dialog-actions>
