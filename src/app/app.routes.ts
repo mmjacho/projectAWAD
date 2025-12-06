@@ -65,6 +65,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/productores/productores').then(m => m.Productores),
     canActivate: [authGuard] 
   },
+  { 
+    path: 'fincas', 
+    loadComponent: () => import('./features/fincas/fincas').then(m => m.Fincas),
+    canActivate: [authGuard] 
+  },
   { path: '**', redirectTo: '/login' }
    
 ];
