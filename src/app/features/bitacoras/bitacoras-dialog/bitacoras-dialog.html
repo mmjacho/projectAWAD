@@ -1,0 +1,90 @@
+<h2 mat-dialog-title>
+      <mat-icon class="v-align-middle me-2">{{ data ? 'edit' : 'event_note' }}</mat-icon>
+      {{ data ? 'Editar Registro' : 'Nuevo Evento de Campo' }}
+    </h2>
+
+    <mat-dialog-content [formGroup]="form">
+      <div class="d-flex flex-column gap-3 pt-2">
+
+        <!-- Fila 1: Parcela y Fecha -->
+        <div class="row g-2">
+            <div class="col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Parcela Afectada</mat-label>
+                  <mat-select formControlName="parcelaId">
+                    @for (p of parcelaService.parcelas(); track p.id) {
+                      <mat-option [value]="p.id">{{ p.nombre }}</mat-option>
+                    }
+                  </mat-select>
+                  <mat-icon matSuffix>landscape</mat-icon>
+                </mat-form-field>
+            </div>
+            
+            <div class="col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Fecha del Evento</mat-label>
+                  <input matInput [matDatepicker]="picker" formControlName="fecha">
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- Tipo de Evento (Toggle visual) -->
+        <div class="d-flex flex-column">
+            <label class="mb-2 fw-bold text-secondary">Tipo de Registro</label>
+            <mat-button-toggle-group formControlName="tipo" class="w-100" (change)="onTipoChange()">
+              <mat-button-toggle value="LABOR" class="w-50">
+                 <mat-icon class="small-icon">agriculture</mat-icon> Labor Cultural
+              </mat-button-toggle>
+              <mat-button-toggle value="PLAGA" class="w-50">
+                 <mat-icon class="small-icon">bug_report</mat-icon> Plaga / Enfermedad
+              </mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+
+        <!-- Nombre del Evento -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ esPlaga() ? 'Nombre de la Plaga' : 'Nombre de la Labor' }}</mat-label>
+          <mat-select formControlName="nombreEvento">
+             @if (esPlaga()) {
+                 <mat-option value="Roya">Roya (Hongo)</mat-option>
+                 <mat-option value="Broca">Broca (Insecto)</mat-option>
+                 <mat-option value="Ojo de Gallo">Ojo de Gallo</mat-option>
+                 <mat-option value="Minador">Minador de Hoja</mat-option>
+             } @else {
+                 <mat-option value="Siembra">Siembra</mat-option>
+                 <mat-option value="Fertilización">Fertilización</mat-option>
+                 <mat-option value="Poda">Poda</mat-option>
+                 <mat-option value="Deshierbe">Deshierbe / Limpieza</mat-option>
+                 <mat-option value="Cosecha">Cosecha</mat-option>
+             }
+          </mat-select>
+        </mat-form-field>
+
+        <!-- SEVERIDAD: Solo visible si es PLAGA -->
+        @if (esPlaga()) {
+            <div class="alert alert-warning p-2 border-warning fade-in">
+                <label class="d-block mb-2 fw-bold text-warning-dark">Nivel de Severidad</label>
+                <mat-button-toggle-group formControlName="severidad" class="w-100">
+                    <mat-button-toggle value="BAJA" class="w-33 text-success">Baja</mat-button-toggle>
+                    <mat-button-toggle value="MEDIA" class="w-33 text-warning">Media</mat-button-toggle>
+                    <mat-button-toggle value="ALTA" class="w-33 text-danger fw-bold">ALTA</mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
+        }
+
+        <mat-form-field appearance="outline">
+          <mat-label>Notas / Observaciones</mat-label>
+          <textarea matInput formControlName="notas" rows="3" placeholder="Detalles del insumo usado o zona específica..."></textarea>
+        </mat-form-field>
+
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="dialogRef.close()">Cancelar</button>
+      <button mat-flat-button color="primary" (click)="guardar()" [disabled]="form.invalid">
+        Guardar Registro
+      </button>
+    </mat-dialog-actions>

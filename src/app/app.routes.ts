@@ -75,6 +75,12 @@ export const routes: Routes = [
     loadComponent: () => import('./features/parcelas/parcelas').then(m => m.Parcelas),
     canActivate: [authGuard] 
   },
+
+  { 
+    path: 'bitacoras', 
+    loadComponent: () => import('./features/bitacoras/bitacoras').then(m => m.Bitacoras),
+    canActivate: [authGuard] 
+  },
   { path: '**', redirectTo: '/login' }
    
 ];

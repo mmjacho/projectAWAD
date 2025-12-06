@@ -92,8 +92,31 @@ export class Header {
       id: 'bitacora',
       label: 'Bitácora de Campo',
       children: [
-        { label: 'Labores', icon: 'task_alt', route: '/labores' },
-        { label: 'Plagas', icon: 'bug_report', route: '/plagas' }
+        //{ label: 'Bitacora', icon: 'task_alt', route: '/labores' },
+        //{ label: 'Plagas', icon: 'bug_report', route: '/plagas' }
+        {
+          id: 'bitacora-sub',
+          label: 'Bitacora',
+          icon: 'task_alt',
+          children: [
+            {
+              id: 'bitacora-mant',
+              label: 'Documentos',
+              icon: 'list_alt',
+              children: [
+                { label: 'Bitacora', icon: 'list_alt', route: '/bitacoras' },
+              ]
+            },
+            {
+              id: 'bitacora-report',
+              label: 'Reportes',
+              icon: 'analytics',
+              children: [
+                { label: 'Bitacora', icon: 'assignment', route: '/reporte-bitacoras' }
+              ]
+            }
+          ]
+        },
       ]
     },
 

@@ -1,0 +1,16 @@
+.container-fluid { max-width: 1400px; }
+    .filtro-input { width: 100%; max-width: 400px; }
+    table { width: 100%; }
+    .text-end { text-align: right; }
+    .text-nowrap { white-space: nowrap; }
+    .small-icon { font-size: 18px; width: 18px; height: 18px; }
+    
+    /* Badges personalizados */
+    .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; letter-spacing: 0.5px; }
+    .sev-baja { background-color: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+    .sev-media { background-color: #fff3e0; color: #ef6c00; border: 1px solid #ffe0b2; }
+    .sev-alta { background-color: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
+    
+    .text-danger { color: #c62828; }
+    .text-success { color: #2e7d32; }
+    .small { font-size: 0.85em; }

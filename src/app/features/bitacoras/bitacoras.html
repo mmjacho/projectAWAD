@@ -1,0 +1,96 @@
+<div class="container-fluid p-4">
+      <h1 class="mb-3">Bitácora de Campo (Labores y Plagas)</h1>
+
+      <div class="controles-tabla d-flex justify-content-between align-items-center mb-3">
+        <mat-form-field appearance="outline" class="filtro-input">
+          <mat-label>Buscar evento...</mat-label>
+          <input matInput (input)="onFiltroChange($event)" placeholder="Ej. Poda, Roya..." [value]="filtro()">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <button mat-flat-button color="primary" (click)="openDialog()">
+          <mat-icon>add_circle</mat-icon>
+          Registrar Evento
+        </button>
+      </div>
+
+      <div class="mat-elevation-z8 table-responsive">
+        <table mat-table [dataSource]="registrosFiltrados()">
+
+          <!-- Fecha -->
+          <ng-container matColumnDef="fecha">
+            <th mat-header-cell *matHeaderCellDef> Fecha </th>
+            <td mat-cell *matCellDef="let r" class="text-nowrap"> 
+                {{ r.fecha | date:'dd/MM/yyyy' }} 
+            </td>
+          </ng-container>
+
+          <!-- Parcela -->
+          <ng-container matColumnDef="parcela">
+            <th mat-header-cell *matHeaderCellDef> Parcela </th>
+            <td mat-cell *matCellDef="let r"> 
+                <span class="fw-bold">{{ getNombreParcela(r.parcelaId) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Evento (Icono + Texto) -->
+          <ng-container matColumnDef="evento">
+            <th mat-header-cell *matHeaderCellDef> Evento </th>
+            <td mat-cell *matCellDef="let r"> 
+                <div class="d-flex align-items-center gap-2">
+                    @if(r.tipo === 'PLAGA') {
+                        <mat-icon class="text-danger small-icon">bug_report</mat-icon>
+                    } @else {
+                        <mat-icon class="text-success small-icon">agriculture</mat-icon>
+                    }
+                    <span>{{ r.nombreEvento }}</span>
+                </div>
+            </td>
+          </ng-container>
+
+          <!-- Severidad (Chips condicionales) -->
+          <ng-container matColumnDef="severidad">
+            <th mat-header-cell *matHeaderCellDef> Estado / Severidad </th>
+            <td mat-cell *matCellDef="let r"> 
+                @if(r.tipo === 'PLAGA') {
+                    <span class="badge" [ngClass]="getClaseSeveridad(r.severidad)">
+                        {{ r.severidad }}
+                    </span>
+                } @else {
+                    <span class="text-muted small">-- Labor --</span>
+                }
+            </td>
+          </ng-container>
+
+          <!-- Notas -->
+          <ng-container matColumnDef="notas">
+            <th mat-header-cell *matHeaderCellDef> Observaciones </th>
+            <td mat-cell *matCellDef="let r" class="text-truncate" style="max-width: 200px;" [matTooltip]="r.notas"> 
+                {{ r.notas }} 
+            </td>
+          </ng-container>
+
+          <!-- Acciones -->
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef class="text-end"> Acciones </th>
+            <td mat-cell *matCellDef="let r" class="text-end">
+              <button mat-icon-button color="primary" (click)="openDialog(r)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="eliminar(r.id)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [colSpan]="displayedColumns.length" class="text-center p-3">
+              No se encontraron registros.
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
