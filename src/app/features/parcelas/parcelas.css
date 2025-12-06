@@ -1,0 +1,7 @@
+.container-fluid { max-width: 1400px; }
+    .filtro-input { width: 100%; max-width: 400px; }
+    table { width: 100%; }
+    .text-end { text-align: right; }
+    td.mat-cell:last-of-type, th.mat-header-cell:last-of-type { padding-right: 24px; }
+    .fw-bold { font-weight: 600; }
+    .text-muted { color: #757575; font-size: 0.85em; }

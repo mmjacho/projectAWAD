@@ -70,6 +70,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/fincas/fincas').then(m => m.Fincas),
     canActivate: [authGuard] 
   },
+  { 
+    path: 'parcelas', 
+    loadComponent: () => import('./features/parcelas/parcelas').then(m => m.Parcelas),
+    canActivate: [authGuard] 
+  },
   { path: '**', redirectTo: '/login' }
    
 ];

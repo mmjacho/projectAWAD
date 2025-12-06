@@ -1,0 +1,76 @@
+<div class="container-fluid p-4">
+      <h1 class="mb-3">Parcelas y Variedades</h1>
+
+      <div class="controles-tabla d-flex justify-content-between align-items-center mb-3">
+        <mat-form-field appearance="outline" class="filtro-input">
+          <mat-label>Buscar parcela...</mat-label>
+          <input matInput (input)="onFiltroChange($event)" placeholder="Nombre o variedad" [value]="filtro()">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <button mat-flat-button color="primary" (click)="openDialog()">
+          <mat-icon>add</mat-icon>
+          Nueva Parcela
+        </button>
+      </div>
+
+      <div class="mat-elevation-z8 table-responsive">
+        <table mat-table [dataSource]="parcelasFiltradas()">
+
+          <!-- Nombre -->
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef> Parcela </th>
+            <td mat-cell *matCellDef="let p"> 
+              <span class="fw-bold">{{p.nombre}}</span>
+              @if(p.descripcion) {
+                  <div class="text-muted small">{{p.descripcion}}</div>
+              }
+            </td>
+          </ng-container>
+
+          <!-- Variedad (Chip visual) -->
+          <ng-container matColumnDef="variedad">
+            <th mat-header-cell *matHeaderCellDef> Variedad </th>
+            <td mat-cell *matCellDef="let p"> 
+               <mat-chip-set>
+                 <mat-chip>{{p.variedad}}</mat-chip>
+               </mat-chip-set>
+            </td>
+          </ng-container>
+
+          <!-- Finca (Cruce de datos) -->
+          <ng-container matColumnDef="finca">
+            <th mat-header-cell *matHeaderCellDef> Finca Origen </th>
+            <td mat-cell *matCellDef="let p"> {{ getNombreFinca(p.fincaId) }} </td>
+          </ng-container>
+
+          <!-- Area -->
+          <ng-container matColumnDef="area">
+            <th mat-header-cell *matHeaderCellDef> Área </th>
+            <td mat-cell *matCellDef="let p"> {{p.area}} Ha </td>
+          </ng-container>
+
+          <!-- Acciones -->
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef class="text-end"> Acciones </th>
+            <td mat-cell *matCellDef="let p" class="text-end">
+              <button mat-icon-button color="primary" (click)="openDialog(p)" matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="eliminar(p.id)" matTooltip="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [colSpan]="displayedColumns.length" class="text-center p-3">
+              No se encontraron parcelas.
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
