@@ -86,6 +86,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/inventario/inventario').then(m => m.Inventario),
     canActivate: [authGuard] 
   },
+  { 
+    path: 'pedidos', 
+    loadComponent: () => import('./features/pedidos/pedidos').then(m => m.Pedidos),
+    canActivate: [authGuard] 
+  },
   { path: '**', redirectTo: '/login' }
    
 ];

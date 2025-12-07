@@ -1,0 +1,19 @@
+.container-fluid {
+    max-width: 1400px;
+}
+
+table {
+    width: 100%;
+}
+
+.fw-bold {
+    font-weight: 600;
+}
+
+.text-success {
+    color: #2e7d32;
+}
+
+.text-end {
+    text-align: right;
+}
