@@ -124,7 +124,7 @@ export class Header {
       id: 'inventario',
       label: 'Lotes e Inventario',
       children: [
-        { label: 'Lotes', icon: 'warehouse', route: '/lotes' },
+        //{ label: 'Lotes', icon: 'warehouse', route: '/lotes' },
         { label: 'Inventario', icon: 'list_alt', route: '/inventario' }
       ]
     },

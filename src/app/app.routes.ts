@@ -81,6 +81,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/bitacoras/bitacoras').then(m => m.Bitacoras),
     canActivate: [authGuard] 
   },
+  { 
+    path: 'inventario', 
+    loadComponent: () => import('./features/inventario/inventario').then(m => m.Inventario),
+    canActivate: [authGuard] 
+  },
   { path: '**', redirectTo: '/login' }
    
 ];
