@@ -26,6 +26,7 @@ export class Header {
 
   hoverLevel1: string | null = null;
   hoverLevel2: string | null = null;
+  hoverLevel3: string | null = null; // <-- NUEVA LÍNEA
 
   readonly companyName = signal('AgroCafé Admin');
 
@@ -60,6 +61,7 @@ export class Header {
     this.router.navigate([route]);
     this.hoverLevel1 = null;
     this.hoverLevel2 = null;
+    this.hoverLevel3 = null; // <-- NUEVA LÍNEA
   }
 
   // ===============================
@@ -90,8 +92,31 @@ export class Header {
       id: 'bitacora',
       label: 'Bitácora de Campo',
       children: [
-        { label: 'Labores', icon: 'task_alt', route: '/labores' },
-        { label: 'Plagas', icon: 'bug_report', route: '/plagas' }
+        //{ label: 'Bitacora', icon: 'task_alt', route: '/labores' },
+        //{ label: 'Plagas', icon: 'bug_report', route: '/plagas' }
+        {
+          id: 'bitacora-sub',
+          label: 'Bitacora',
+          icon: 'task_alt',
+          children: [
+            {
+              id: 'bitacora-mant',
+              label: 'Documentos',
+              icon: 'list_alt',
+              children: [
+                { label: 'Bitacora', icon: 'list_alt', route: '/bitacoras' },
+              ]
+            },
+            {
+              id: 'bitacora-report',
+              label: 'Reportes',
+              icon: 'analytics',
+              children: [
+                { label: 'Bitacora', icon: 'assignment', route: '/reporte-bitacoras' }
+              ]
+            }
+          ]
+        },
       ]
     },
 
@@ -99,7 +124,7 @@ export class Header {
       id: 'inventario',
       label: 'Lotes e Inventario',
       children: [
-        { label: 'Lotes', icon: 'warehouse', route: '/lotes' },
+        //{ label: 'Lotes', icon: 'warehouse', route: '/lotes' },
         { label: 'Inventario', icon: 'list_alt', route: '/inventario' }
       ]
     },

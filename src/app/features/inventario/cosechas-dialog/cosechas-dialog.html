@@ -1,0 +1,85 @@
+<h2 mat-dialog-title>
+      <mat-icon class="v-align-middle me-2">agriculture</mat-icon>
+      Registrar Nueva Cosecha
+    </h2>
+
+    <mat-dialog-content [formGroup]="form">
+      <div class="d-flex flex-column gap-3 pt-2">
+        
+        <div class="alert alert-info">
+            Esta acción creará un nuevo <strong>Lote de Café</strong> en el inventario.
+        </div>
+
+        <!-- Origen -->
+        <mat-form-field appearance="outline">
+          <mat-label>Parcela de Origen</mat-label>
+          <mat-select formControlName="parcelaId">
+            @for (p of parcelaService.parcelas(); track p.id) {
+               <!-- Filtramos solo parcelas activas -->
+               @if (p.activa) {
+                 <mat-option [value]="p.id">
+                    {{ p.nombre }} - {{ p.variedad }} 
+                    <small class="text-muted">({{ getProductor(p.fincaId) }})</small>
+                 </mat-option>
+               }
+            }
+          </mat-select>
+          <mat-icon matSuffix>landscape</mat-icon>
+        </mat-form-field>
+
+        <div class="row g-2">
+            <div class="col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Fecha Cosecha</mat-label>
+                  <input matInput [matDatepicker]="picker" formControlName="fechaCosecha">
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            
+            <div class="col-md-6">
+                 <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Calidad / Clasificación</mat-label>
+                  <mat-select formControlName="calidad">
+                    <mat-option value="Primera">Primera (Exportación)</mat-option>
+                    <mat-option value="Segunda">Segunda (Consumo)</mat-option>
+                    <mat-option value="Descarte">Descarte / Pasilla</mat-option>
+                  </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row g-2">
+             <div class="col-md-8">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Peso Total (Cosechado)</mat-label>
+                  <input matInput type="number" formControlName="cantidadInicial" min="1">
+                  <mat-icon matSuffix>scale</mat-icon>
+                </mat-form-field>
+             </div>
+             <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Unidad</mat-label>
+                  <mat-select formControlName="unidad">
+                    <mat-option value="qq">Quintales</mat-option>
+                    <mat-option value="kg">Kilos</mat-option>
+                    <mat-option value="lb">Libras</mat-option>
+                  </mat-select>
+                </mat-form-field>
+             </div>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Notas adicionales</mat-label>
+          <textarea matInput formControlName="notas" rows="2" placeholder="Ej. Lluvia durante la recolección..."></textarea>
+        </mat-form-field>
+
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="dialogRef.close()">Cancelar</button>
+      <button mat-flat-button color="primary" (click)="guardar()" [disabled]="form.invalid">
+        Ingresar a Bodega
+      </button>
+    </mat-dialog-actions>

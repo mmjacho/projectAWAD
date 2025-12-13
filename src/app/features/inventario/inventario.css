@@ -1,0 +1,22 @@
+.container-fluid { max-width: 1400px; }
+    .bg-white { background: white; }
+    .rounded { border-radius: 8px; overflow: hidden; }
+    
+    /* KPIs */
+    .kpi-card { position: relative; overflow: hidden; height: 100px; }
+    .bg-primary-soft { background-color: #efebe9; color: #3e2723; }
+    .kpi-title { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
+    .kpi-value { font-size: 2.5rem; font-weight: 700; line-height: 1.2; }
+    .kpi-icon { position: absolute; right: 10px; top: 20px; font-size: 60px; height: 60px; width: 60px; opacity: 0.1; }
+
+    /* Tablas */
+    table { width: 100%; }
+    .fw-bold { font-weight: 600; }
+    .text-primary { color: #5d4037 !important; }
+    .text-success { color: #2e7d32; }
+    .text-danger { color: #c62828; }
+    .badge-outline { border: 1px solid #d7ccc8; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; color: #5d4037; }
+    
+    /* Layout */
+    .row { display: flex; gap: 20px; }
+    .col-md-4 { flex: 1; min-width: 250px; }

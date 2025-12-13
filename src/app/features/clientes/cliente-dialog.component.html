@@ -1,0 +1,60 @@
+<h2 mat-dialog-title>{{ data ? 'Modificar Cliente' : 'Crear Cliente' }}</h2>
+
+<mat-dialog-content [formGroup]="clienteForm">
+  <div class="d-flex flex-column gap-2">
+    <mat-form-field appearance="outline">
+      <mat-label>RUC / ID</mat-label>
+      <input matInput formControlName="ruc" required>
+      @if (clienteForm.get('ruc')?.hasError('required')) {
+        <mat-error>El RUC o ID es requerido</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Razón Social</mat-label>
+      <input matInput formControlName="razonSocial" required>
+       @if (clienteForm.get('razonSocial')?.hasError('required')) {
+        <mat-error>La Razón Social es requerida</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" required>
+      @if (clienteForm.get('email')?.hasError('required')) {
+        <mat-error>El email es requerido</mat-error>
+      }
+      @if (clienteForm.get('email')?.hasError('email')) {
+        <mat-error>Email inválido</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Teléfono</mat-label>
+      <input matInput formControlName="telefono" required>
+       @if (clienteForm.get('telefono')?.hasError('required')) {
+        <mat-error>El teléfono es requerido</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Tipo de Cliente</mat-label>
+      <mat-select formControlName="tipo" required>
+        @for (tipo of tipos; track tipo) {
+          <mat-option [value]="tipo">{{ tipo }}</mat-option>
+        }
+      </mat-select>
+       @if (clienteForm.get('tipo')?.hasError('required')) {
+        <mat-error>El tipo es requerido</mat-error>
+      }
+    </mat-form-field>
+
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="clienteForm.invalid">
+    {{ data ? 'Actualizar' : 'Guardar' }}
+  </button>
+</mat-dialog-actions>

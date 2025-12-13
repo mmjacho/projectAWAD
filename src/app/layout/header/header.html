@@ -1,65 +1,72 @@
 <mat-toolbar color="primary" class="mat-elevation-z6 toolbar-main px-3 py-2">
   <div class="container-fluid d-flex justify-content-between align-items-center flex-wrap">
 
-    <!-- Branding -->
     <div class="d-flex align-items-center brand">
       <mat-icon class="me-2">local_cafe</mat-icon>
       <span class="brand-name">{{ companyName() }}</span>
     </div>
 
-    <!-- Right side (kept EXACTLY as before) -->
     <div class="d-none d-md-flex align-items-center gap-3">
       <button mat-button (click)="onAboutClick()">Acerca de</button>
 
-      @if(!logueadoCabecera)
-      {
+      @if(!logueadoCabecera) {
       <button mat-stroked-button color="accent" (click)="onLoginClick()">Iniciar Sesión</button>
-      }
-
-      @if(logueadoCabecera)
-      {
+      } @else {
       <button mat-stroked-button color="accent" (click)="onLogoutClick()">Cerrar Sesión</button>
       }
     </div>
 
-    <!-- Mobile hamburger -->
     <button mat-icon-button class="d-md-none" aria-label="Abrir menú" (click)="toggleMobileMenu()">
       <mat-icon>menu</mat-icon>
     </button>
   </div>
 </mat-toolbar>
 
-<!-- ================= RIBBON MENU (NIVEL 1) ================= -->
-@if(logueadoCabecera)
-{
+@if(logueadoCabecera) {
 <nav class="ribbon d-none d-md-flex px-3 py-2">
+  
   @for (mod of menuItems; track mod.label) {
-
-  <div class="ribbon-item" (mouseenter)="hoverLevel1 = mod.id ?? mod.label" (mouseleave)="hoverLevel1 = null">
+  <div class="ribbon-item" 
+       (mouseenter)="hoverLevel1 = mod.id ?? mod.label" 
+       (mouseleave)="hoverLevel1 = null">
 
     <button mat-button class="ribbon-btn">
       {{ mod.label }}
     </button>
 
-    <!-- LEVEL 2 -->
     @if (hoverLevel1 === (mod.id ?? mod.label)) {
     <ul class="submenu mat-elevation-z8">
-
+      
       @for (opt of (mod.children ?? []); track opt.label) {
-      <li class="submenu-item" (mouseenter)="hoverLevel2 = opt.id ?? opt.label" (mouseleave)="hoverLevel2 = null">
-
-        <mat-icon>{{ opt.icon }}</mat-icon>
+      <li class="submenu-item"
+          (mouseenter)="hoverLevel2 = opt.id ?? opt.label"
+          (mouseleave)="hoverLevel2 = null"
+          (click)="!opt.children?.length ? navigateTo(opt.route) : null"> <mat-icon>{{ opt.icon }}</mat-icon>
         <span>{{ opt.label }}</span>
+        
+        @if (opt.children?.length) {
+          <mat-icon class="arrow">chevron_right</mat-icon>
+        }
 
-        <mat-icon class="arrow" *ngIf="opt.children?.length">chevron_right</mat-icon>
-
-        <!-- LEVEL 3 -->
         @if (opt.children?.length && hoverLevel2 === (opt.id ?? opt.label)) {
         <ul class="submenu level3 mat-elevation-z8">
+          
           @for (deep of opt.children; track deep.label) {
-          <li class="submenu-item" (click)="navigateTo(deep.route)">
-            <mat-icon>{{ deep.icon }}</mat-icon>
-            {{ deep.label }}
+          <li class="submenu-item"
+              (mouseenter)="hoverLevel3 = deep.id ?? deep.label"
+              (mouseleave)="hoverLevel3 = null"
+              (click)="!deep.children?.length ? navigateTo(deep.route) : null"> <mat-icon>{{ deep.icon }}</mat-icon>
+            <span>{{ deep.label }}</span> @if (deep.children?.length) {
+              <mat-icon class="arrow">chevron_right</mat-icon>
+            }
+
+            @if (deep.children?.length && hoverLevel3 === (deep.id ?? deep.label)) {
+            <ul class="submenu level3 mat-elevation-z8"> @for (deepest of deep.children; track deepest.label) {
+              <li class="submenu-item" (click)="navigateTo(deepest.route)"> <mat-icon>{{ deepest.icon }}</mat-icon>
+                <span>{{ deepest.label }}</span> </li>
+              }
+            </ul>
+            }
           </li>
           }
         </ul>
@@ -73,12 +80,16 @@
 </nav>
 }
 
-<!-- Mobile menu (unchanged) -->
 @if (mobileMenuOpen) {
 <div class="mobile-menu bg-light border-top py-2 d-md-none">
   <div class="container d-flex flex-column align-items-start gap-2">
     <button mat-button color="primary" class="w-100 text-start" (click)="onAboutClick()">Acerca de</button>
-    <button mat-stroked-button color="accent" class="w-100 text-start" (click)="onLoginClick()">Iniciar Sesión</button>
+    
+    @if(!logueadoCabecera) {
+      <button mat-stroked-button color="accent" class="w-100 text-start" (click)="onLoginClick()">Iniciar Sesión</button>
+    } @else {
+      <button mat-stroked-button color="accent" class="w-100 text-start" (click)="onLogoutClick()">Cerrar Sesión</button>
+      }
   </div>
 </div>
 }

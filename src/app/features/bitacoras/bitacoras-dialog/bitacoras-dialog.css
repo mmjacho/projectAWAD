@@ -1,0 +1,14 @@
+.v-align-middle { vertical-align: middle; }
+    .w-100 { width: 100%; }
+    .w-50 { width: 50%; }
+    .w-33 { width: 33.33%; }
+    .row { display: flex; gap: 10px; }
+    .col-md-6 { flex: 1; }
+    .small-icon { font-size: 18px; width: 18px; height: 18px; vertical-align: text-bottom; margin-right: 5px; }
+    .fade-in { animation: fadeIn 0.3s ease-in; }
+    .text-warning-dark { color: #856404; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    
+    /* Colores personalizados para los toggles */
+    .text-success { color: #2e7d32; }
+    .text-danger { color: #c62828; }

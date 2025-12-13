@@ -1,0 +1,33 @@
+.v-align-middle {
+    vertical-align: middle;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.row {
+    display: flex;
+    gap: 10px;
+}
+
+.col-md-6 {
+    flex: 1;
+}
+
+.col-md-8 {
+    flex: 2;
+}
+
+.col-md-4 {
+    flex: 1;
+}
+
+.alert-info {
+    background-color: #e1f5fe;
+    color: #01579b;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    border: 1px solid #b3e5fc;
+}

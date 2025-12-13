@@ -1,0 +1,5 @@
+.text-muted { color: #757575; }
+    .small { font-size: 0.85em; }
+    .w-100 { width: 100%; }
+    .row { display: flex; gap: 10px; }
+    .col-md-6 { flex: 1; }
