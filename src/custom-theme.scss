@@ -1,131 +1,197 @@
 @use '@angular/material' as mat;
 
-// === PALETAS PERSONALIZADAS ===
+// ===========================================================
+// 1. PALETAS DE COLOR (AgroCafé)
+// ===========================================================
 $cafe-primary: (
-  0: #3e2723,
+  0: #000000,
   10: #4e342e,
-  20: #5d4037,
+  20: #5d4037, // Tono principal
+  25: #6b4b41,
+  30: #7a574c,
+  35: #896357,
   40: #6d4c41,
-  80: #a1887f,
+  50: #a1887f,
+  60: #8d6e63,
+  70: #a1887f,
+  80: #bcaaa4,
   90: #d7ccc8,
-  100: #efebe9,
+  95: #efebe9,
+  98: #fbe9e7,
+  99: #fff8e1,
+  100: #ffffff,
 );
 
 $cafe-tertiary: (
-  20: #b9804d,
-  40: #c49a6c,
-  90: #ffe0b2,
-  100: #fff8e1,
+  0: #000000,
+  10: #2b1700,
+  20: #482900,
+  30: #663d00,
+  40: #865200,
+  80: #ffb86f,
+  90: #ffdcbe,
+  95: #ffeee0,
+  99: #fffbf9,
+  100: #ffffff,
 );
 
-// === TEMA DEFINIDO ===
+// ===========================================================
+// 2. CONFIGURACIÓN DEL TEMA (Angular Material M3)
+// ===========================================================
 html {
   @include mat.theme((
     color: (
       primary: $cafe-primary,
       tertiary: $cafe-tertiary,
+      surface: $cafe-primary, // Usamos la paleta para generar superficies coherentes
     ),
     typography: (
-      brand-family: 'Inter, Roboto, "Helvetica Neue", sans-serif',
-      plain-family: 'Inter, Roboto, "Helvetica Neue", sans-serif',
+      brand-family: 'Inter, Roboto, sans-serif',
+      plain-family: 'Inter, Roboto, sans-serif',
     ),
     density: 0,
   ));
 }
 
-// === ESTILOS BASE ===
-body {
-  color-scheme: light;
-  background-color: var(--mat-sys-surface, #faf3ef);
-  color: var(--mat-sys-on-surface, #3e2723);
-  font: var(--mat-sys-body-medium);
-  margin: 0;
+// ===========================================================
+// 3. VARIABLES GLOBALES DEL SISTEMA (Root)
+// Forzamos estas variables para asegurar consistencia en toda la app
+// ===========================================================
+:root {
+  --mat-sys-primary: #5d4037;
+  --mat-sys-on-primary: #ffffff;
+  
+  --mat-sys-surface: #faf3ef;         // Fondo general (Beige suave)
+  --mat-sys-on-surface: #3e2723;      // Texto general (Café oscuro)
+  
+  --mat-sys-surface-container: #ffffff; // Fondo para Tarjetas/Modales/Menús (Blanco)
+  --mat-sys-surface-container-high: #efebe9; // Fondo alternativo
+  
+  --mat-sys-outline: #a1887f;         // Bordes
+  --mat-sys-outline-variant: #d7ccc8; // Bordes suaves
 }
 
-/* ===========================================================
-   DIALOGOS AGROCAFE (M3 + TEMA CAFE)
-   =========================================================== */
+// ===========================================================
+// 4. ESTILOS BASE Y SCROLLBAR
+// ===========================================================
+body {
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font-family: 'Inter', Roboto, sans-serif;
+  margin: 0;
+  height: 100vh;
+}
 
+// Scrollbar estilo Café
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #efebe9;
+}
+::-webkit-scrollbar-thumb {
+  background: #8d6e63;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #6d4c41;
+}
+
+// ===========================================================
+// 5. ESTILOS DE COMPONENTES AGROCAFÉ
+// ===========================================================
+
+/* --- DIÁLOGOS (Modales) --- */
 .dialog-cafe .mat-mdc-dialog-container {
-  background: whitesmoke;//var(--mat-sys-surface, white) !important;
+  // Forzamos fondo blanco explícito
+  background-color: #ffffff !important; 
+  --mdc-dialog-container-color: #ffffff;
+  
   color: var(--mat-sys-on-surface) !important;
   border-radius: 16px !important;
-  padding: 0 !important;
-
-  // sombra cálida (no negra)
-  box-shadow:
-    0 4px 16px rgba(62, 39, 35, 0.25),
-    0 8px 28px rgba(62, 39, 35, 0.20) !important;
-
-  animation: dialogFadeIn 0.25s ease-out;
+  
+  // Sombra suave color café
+  box-shadow: 0 10px 30px rgba(62, 39, 35, 0.15) !important;
 }
 
-/* Título */
 .dialog-cafe h2[mat-dialog-title] {
-  padding: 1rem 1.5rem;
-  margin: 0;
-  font-size: 1.35rem;
+  background-color: #faf3ef; // Cabecera beige
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  color: #3e2723;
   font-weight: 600;
-  background: var(--mat-sys-surface-container, #faf3ef);
-  color: var(--mat-sys-on-surface);
-  border-bottom: 1px solid var(--mat-sys-outline-variant, #d7ccc8);
+  padding: 16px 24px;
 }
 
-/* Contenido */
-.dialog-cafe mat-dialog-content {
-  padding: 1.4rem 1.5rem !important;
-}
-
-/* Form fields */
-.dialog-cafe .mat-mdc-form-field {
-  width: 100%;
-}
-
-.dialog-cafe .mat-mdc-form-field-appearance-outline
-  .mdc-notched-outline__leading,
-.dialog-cafe .mat-mdc-form-field-appearance-outline
-  .mdc-notched-outline__trailing {
-  border-color: var(--mat-sys-primary, #6d4c41) !important;
-}
-
-/* focus */
-.dialog-cafe .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
-.dialog-cafe .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
-  border-color: var(--mat-sys-primary) !important;
-}
-
-/* Action buttons */
-.dialog-cafe .mat-mdc-dialog-actions {
-  padding: 1rem 1.5rem !important;
-  border-top: 1px solid var(--mat-sys-outline-variant, #d7ccc8);
-}
-
-.dialog-cafe button[mat-button] {
-  color: var(--mat-sys-primary);
-  font-weight: 500;
-}
-
-.dialog-cafe button[mat-flat-button] {
-  border-radius: 8px;
-  background: var(--mat-sys-primary);
-  color: var(--mat-sys-on-primary);
-  font-weight: 600;
-
-  transition: background 0.2s ease-in-out;
-}
-
-.dialog-cafe button[mat-flat-button]:hover {
-  background-color: var(--mat-sys-primary-dark, #4e342e);
-}
-
-/* Animación */
-@keyframes dialogFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px) scale(.95);
+/* --- CAMPOS DE FORMULARIO (Inputs) --- */
+// Hacemos que los inputs tengan fondo blanco para que resalten
+.mat-mdc-form-field {
+  .mdc-text-field--outlined {
+    background-color: #ffffff !important; 
+    border-radius: 8px;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+}
+
+/* --- BOTONES --- */
+.mat-mdc-raised-button.mat-primary, 
+.mat-mdc-flat-button.mat-primary {
+  --mdc-filled-button-container-color: #5d4037;
+  --mdc-filled-button-label-text-color: #ffffff;
+}
+
+// ===========================================================
+// 6. FIX CRÍTICO: COMPONENTES FLOTANTES (OVERLAYS)
+// Soluciona transparencia en Selects, Datepickers, Menús y Tooltips
+// ===========================================================
+
+// Atacamos directamente al contenedor CDK para asegurar especificidad
+.cdk-overlay-pane {
+
+  // 1. Paneles de Select, Menús y Autocompletar
+  .mat-mdc-select-panel,
+  .mat-mdc-menu-panel,
+  .mat-mdc-autocomplete-panel {
+    background-color: #ffffff !important; // Fondo blanco OBLIGATORIO
+    color: #3e2723 !important;            // Texto café
+    border: 1px solid #d7ccc8;            // Borde sutil
+    box-shadow: 0 5px 15px rgba(62, 39, 35, 0.2) !important;
+    border-radius: 8px !important;
+  }
+
+  // 2. Opciones dentro de los menús (Hover)
+  .mat-mdc-option:hover, 
+  .mat-mdc-option.mdc-list-item--selected {
+    background-color: #efebe9 !important; // Gris/Beige al pasar mouse
+  }
+  
+  // 3. Texto de las opciones
+  .mat-mdc-option .mdc-list-item__primary-text {
+    color: #3e2723 !important;
+  }
+
+  // 4. Calendario (Datepicker)
+  .mat-datepicker-content {
+    background-color: #ffffff !important;
+    color: #3e2723 !important;
+    box-shadow: 0 5px 20px rgba(62, 39, 35, 0.25) !important;
+    border-radius: 12px !important;
+  }
+  
+  // Encabezado del calendario
+  .mat-calendar-table-header th {
+    color: #8d6e63; 
+  }
+  
+  // Celdas del calendario
+  .mat-calendar-body-cell-content {
+    color: #3e2723 !important;
+  }
+  
+  // 5. Tooltips (Invertidos para contraste)
+  .mdc-tooltip__surface {
+    background-color: #3e2723 !important;
+    color: #ffffff !important;
+    border-radius: 4px;
+    font-size: 0.8rem;
   }
 }
