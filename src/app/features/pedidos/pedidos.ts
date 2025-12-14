@@ -37,7 +37,9 @@ public pedidoService = inject(PedidosService);
 
   openNuevaVenta() {
     const ref = this.dialog.open(PedidosForm, {
-        width: '1800px', // Ancho para acomodar la tabla interna
+        width: '80vw', // Ocupa el 90% del ancho de la ventana
+        height: '80vh', // Ocupa el 90% del alto de la ventana
+        maxWidth: '100vw', // Permite que crezca hasta el borde si es necesario
         panelClass: 'dialog-cafe',
         disableClose: true // Evitar cierre accidental
     });
