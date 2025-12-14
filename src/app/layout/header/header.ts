@@ -33,7 +33,7 @@ export class Header {
   constructor(
     private router: Router,
     private autoriza: AuthService
-  ) {}
+  ) { }
 
   // 👉 Aquí ya NO usamos field initializer con this.autoriza
   get logueadoCabecera(): boolean {
@@ -112,7 +112,7 @@ export class Header {
               label: 'Reportes',
               icon: 'analytics',
               children: [
-                { label: 'Bitacora', icon: 'assignment', route: '/reporte-bitacoras' }
+                { label: 'Bitacora', icon: 'assignment', route: '/bitacoras-reporte' }
               ]
             }
           ]
@@ -125,7 +125,23 @@ export class Header {
       label: 'Lotes e Inventario',
       children: [
         //{ label: 'Lotes', icon: 'warehouse', route: '/lotes' },
-        { label: 'Inventario', icon: 'list_alt', route: '/inventario' }
+        //{ label: 'Inventario', icon: 'list_alt', route: '/inventario' }
+        {
+          id: 'inventario-mant',
+          label: 'Documentos',
+          icon: 'list_alt',
+          children: [
+            { label: 'Inventario', icon: 'list_alt', route: '/inventario' },
+          ]
+        },
+        {
+          id: 'inventario-report',
+          label: 'Reportes',
+          icon: 'analytics',
+          children: [
+            { label: 'Inventario', icon: 'assignment', route: '/inventario-reporte' }
+          ]
+        }
       ]
     },
     {
@@ -152,7 +168,7 @@ export class Header {
               label: 'Reportes',
               icon: 'analytics',
               children: [
-                { label: 'Clientes', icon: 'assignment', route: '/reporte-clientes' }
+                { label: 'Clientes', icon: 'assignment', route: '/clientes-reporte' }
               ]
             }
           ]
@@ -177,7 +193,7 @@ export class Header {
               label: 'Reportes',
               icon: 'analytics',
               children: [
-                { label: 'Pedidos', icon: 'assignment', route: '/reporte-pedidos' }
+                { label: 'Pedidos', icon: 'assignment', route: '/pedidos-reporte' }
               ]
             }
           ]
