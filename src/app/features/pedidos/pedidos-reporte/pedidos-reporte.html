@@ -1,0 +1,109 @@
+<div class="container-fluid p-4">
+      
+      <!-- CABECERA -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center gap-2">
+            <button mat-icon-button routerLink="/pedidos">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            <h1 class="m-0">Reporte de Ventas</h1>
+        </div>
+      </div>
+
+      <!-- FILTROS -->
+      <mat-card class="mb-4 filtro-card">
+        <mat-card-content class="pt-3">
+          <form [formGroup]="filterForm" class="d-flex flex-wrap gap-3 align-items-center">
+            
+            <!-- Rango Fechas -->
+            <mat-form-field appearance="outline" class="filter-field">
+                <mat-label>Periodo (dd/mm/aaaa)</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                  <input matStartDate formControlName="inicio" placeholder="Desde">
+                  <input matEndDate formControlName="fin" placeholder="Hasta">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+
+            <!-- Filtro Estado -->
+            <mat-form-field appearance="outline" class="filter-field">
+                <mat-label>Estado Factura</mat-label>
+                <mat-select formControlName="estado">
+                  <mat-option value="TODOS">Todas</mat-option>
+                  <mat-option value="PAGADO">Pagadas</mat-option>
+                  <mat-option value="ANULADO">Anuladas</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <!-- Resumen Financiero -->
+            <div class="ms-auto d-flex gap-4">
+                <div class="stat-box text-success">
+                    <span class="h4 m-0 fw-bold">{{ totalVentas() | currency }}</span>
+                    <small>Total Vendido</small>
+                </div>
+                <div class="stat-box text-secondary">
+                    <span class="h4 m-0 fw-bold">{{ registrosEncontrados() }}</span>
+                    <small>Facturas</small>
+                </div>
+            </div>
+
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- BOTONES EXPORTAR -->
+      <div class="d-flex gap-3 mb-3 justify-content-end">
+          <button mat-raised-button class="btn-pdf" (click)="exportar('PDF')" [disabled]="registrosEncontrados() === 0">
+              <mat-icon>picture_as_pdf</mat-icon> Exportar PDF
+          </button>
+          <button mat-raised-button class="btn-excel" (click)="exportar('EXCEL')" [disabled]="registrosEncontrados() === 0">
+              <mat-icon>table_view</mat-icon> Exportar Excel
+          </button>
+      </div>
+
+      <!-- TABLA PREVIEW -->
+      <div class="mat-elevation-z8 table-responsive">
+          <table mat-table [dataSource]="datosVistaPrevia()">
+              
+              <ng-container matColumnDef="factura">
+                  <th mat-header-cell *matHeaderCellDef> Factura </th>
+                  <td mat-cell *matCellDef="let p" class="fw-bold"> {{ p.numeroFactura }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="fecha">
+                  <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                  <td mat-cell *matCellDef="let p"> {{ p.fecha | date:'dd/MM/yyyy' }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="cliente">
+                  <th mat-header-cell *matHeaderCellDef> Cliente </th>
+                  <td mat-cell *matCellDef="let p"> {{ getNombreCliente(p.clienteId) }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="total">
+                  <th mat-header-cell *matHeaderCellDef> Total </th>
+                  <td mat-cell *matCellDef="let p" class="text-success fw-bold"> {{ p.total | currency }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="estado">
+                  <th mat-header-cell *matHeaderCellDef> Estado </th>
+                  <td mat-cell *matCellDef="let p"> 
+                      <span class="badge" [class.bg-success]="p.estado === 'PAGADO'" [class.bg-danger]="p.estado === 'ANULADO'">
+                          {{ p.estado }}
+                      </span>
+                  </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="['factura', 'fecha', 'cliente', 'total', 'estado']"></tr>
+              <tr mat-row *matRowDef="let row; columns: ['factura', 'fecha', 'cliente', 'total', 'estado'];"></tr>
+
+              <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" colspan="5" class="text-center p-4">
+                      No se encontraron ventas en este periodo.
+                  </td>
+              </tr>
+          </table>
+      </div>
+
+    </div>

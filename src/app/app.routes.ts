@@ -59,6 +59,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/clientes/clientes.component').then(m => m.ClientesComponent),
     canActivate: [authGuard] 
   },
+  { 
+    path: 'clientes-reporte', 
+    loadComponent: () => import('./features/clientes/clientes-reporte/clientes-reporte').then(m => m.ClientesReporte),
+    canActivate: [authGuard] 
+  },
   // --- FIN RUTAS NUEVAS ---
   { 
     path: 'productores', 
@@ -82,13 +87,28 @@ export const routes: Routes = [
     canActivate: [authGuard] 
   },
   { 
+    path: 'bitacoras-reporte', 
+    loadComponent: () => import('./features/bitacoras/bitacoras-reporte/bitacoras-reporte').then(m => m.BitacorasReporte),
+    canActivate: [authGuard] 
+  },
+  { 
     path: 'inventario', 
     loadComponent: () => import('./features/inventario/inventario').then(m => m.Inventario),
     canActivate: [authGuard] 
   },
   { 
+    path: 'inventario-reporte', 
+    loadComponent: () => import('./features/inventario/inventario-reporte/inventario-reporte').then(m => m.InventarioReporte),
+    canActivate: [authGuard] 
+  },
+  { 
     path: 'pedidos', 
     loadComponent: () => import('./features/pedidos/pedidos').then(m => m.Pedidos),
+    canActivate: [authGuard] 
+  },
+  { 
+    path: 'pedidos-reporte', 
+    loadComponent: () => import('./features/pedidos/pedidos-reporte/pedidos-reporte').then(m => m.PedidosReporte),
     canActivate: [authGuard] 
   },
   { path: '**', redirectTo: '/login' }

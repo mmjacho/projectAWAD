@@ -1,0 +1,16 @@
+.container-fluid { max-width: 1400px; }
+    .filter-field { width: 250px; }
+    .gap-3 { gap: 1rem; }
+    .filtro-card { border-left: 5px solid #3e2723; }
+    
+    .stat-box { 
+        display: flex; flex-direction: column; align-items: center; 
+        padding: 0 20px; border-left: 1px solid #eee;
+    }
+    
+    .btn-pdf { background-color: #c62828 !important; color: white !important; }
+    .btn-excel { background-color: #2e7d32 !important; color: white !important; }
+
+    table { width: 100%; }
+    .fw-bold { font-weight: 600; }
+    .text-danger { color: #d32f2f; }
