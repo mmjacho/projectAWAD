@@ -3,27 +3,22 @@ import { HttpInterceptorFn, HttpHeaders } from '@angular/common/http';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = localStorage.getItem('token');
 
-
-  /*if (token) {
-    // Clonamos la petición para añadir el header de autorización
-    const authReq = req.clone({
-        headers: req.headers.set('Authorization', `Bearer ${token}`)
-    });
-    return next(authReq);
-  }*/
-  let httpHeaders = new HttpHeaders({
-
-  });
+  let authReq = req;
 
   if (token) {
-    httpHeaders = httpHeaders.set('accept', `*/*`);
-    httpHeaders = httpHeaders.set('Content-Type', `application/json`);
-    httpHeaders = httpHeaders.set('Authorization', `Bearer ${token}`);
+    console.log('Token encontrado:', token);
+    
+    // Clonar la solicitud añadiendo el header de Authorization
+    authReq = req.clone({
+      headers: req.headers
+        .set('Authorization', `Bearer ${token}`)
+        // Solo añade estos headers si no están ya presentes
+        .set('accept', req.headers.get('accept') || '*/*')
+        .set('Content-Type', req.headers.get('Content-Type') || 'application/json')
+    });
+
+    console.log('Headers enviados:', authReq.headers.keys());
   }
 
-  const authReq = req.clone({
-    headers: httpHeaders
-  });
-
-  return next(req);
+  return next(authReq);
 };

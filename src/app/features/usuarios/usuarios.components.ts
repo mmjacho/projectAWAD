@@ -67,27 +67,43 @@ export class UsuariosComponent {
     const dialogRef = this.dialog.open(UsuarioDialogComponent, {
       width: '450px',
       panelClass: 'dialog-cafe',
-      data: usuario ? { ...usuario } : null, // Pasa una copia para evitar mutaciones
+      data: usuario ? { ...usuario } : null,
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         if (result.id) {
-          // Es una actualización
-          this.usuarioService.updateUser(result);
+          // ACTUALIZAR (Subscribe al observable)
+          this.usuarioService.updateUser(result).subscribe({
+            next: (res) => {
+              if (res.success) alert('Usuario actualizado correctamente');
+              else alert('Error: ' + res.message);
+            },
+            error: () => alert('Error de conexión al actualizar')
+          });
         } else {
-          // Es uno nuevo
-          this.usuarioService.addUser(result);
+          // CREAR (Subscribe al observable)
+          this.usuarioService.addUser(result).subscribe({
+            next: (res) => {
+              if (res.success) alert('Usuario creado correctamente');
+              else alert('Error: ' + res.message);
+            },
+            error: () => alert('Error de conexión al crear')
+          });
         }
       }
     });
   }
 
-  // Eliminar usuario
   eliminarUsuario(id: number): void {
-    // Aquí podrías agregar un diálogo de confirmación
     if (confirm('¿Está seguro de que desea eliminar este usuario?')) {
-      this.usuarioService.deleteUser(id);
+      this.usuarioService.deleteUser(id).subscribe({
+        next: (res) => {
+          if (res.success) alert('Usuario eliminado');
+          else alert('Error: ' + res.message);
+        },
+        error: () => alert('Error de conexión al eliminar')
+      });
     }
   }
 }
