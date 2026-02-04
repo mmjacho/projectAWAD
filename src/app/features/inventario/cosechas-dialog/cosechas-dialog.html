@@ -16,9 +16,9 @@
           <mat-select formControlName="parcelaId">
             @for (p of parcelaService.parcelas(); track p.id) {
                <!-- Filtramos solo parcelas activas -->
-               @if (p.activa) {
+               @if (p.anulado) {
                  <mat-option [value]="p.id">
-                    {{ p.nombre }} - {{ p.variedad }} 
+                    {{ p.nombre }} - {{ p.variedadId }} 
                     <small class="text-muted">({{ getProductor(p.fincaId) }})</small>
                  </mat-option>
                }

@@ -4,6 +4,7 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { Parcela } from '../../../core/models/parcela.model';
 import { FincasService } from '../../fincas/fincas.service';
 import { ProductoresService } from '../../productores/productores.service';
+import { ParcelasService } from '../parcelas.service';
 
 // Material Imports
 import { MatButtonModule } from '@angular/material/button';
@@ -36,21 +37,28 @@ private fb = inject(FormBuilder);
   // Servicios inyectados public para usarlos en el HTML (Angular 20 style)
   public fincaService = inject(FincasService);
   public productorService = inject(ProductoresService);
+  public parcelaService = inject(ParcelasService);
 
   protected parcelaForm: FormGroup;
   
   // Lista quemada de variedades comunes
-  public variedades = ['Arábica', 'Robusta', 'Caturra', 'Borbón', 'Típica'];
+  //public variedades = ['Arábica', 'Robusta', 'Caturra', 'Borbón', 'Típica'];
 
   constructor() {
+    // Si la data viene con anulado=true -> activaVisual=false
+    const esActiva = this.data ? !this.data.anulado : true;
+
     this.parcelaForm = this.fb.group({
       id: [this.data?.id ?? null],
       nombre: [this.data?.nombre ?? '', Validators.required],
-      variedad: [this.data?.variedad ?? '', Validators.required],
+      
+      // variedadId ahora guarda el ID numérico
+      variedadId: [this.data?.variedadId ?? null, Validators.required],
+      
       area: [this.data?.area ?? 0, [Validators.required, Validators.min(0.1)]],
       fincaId: [this.data?.fincaId ?? null, Validators.required],
       descripcion: [this.data?.descripcion ?? ''],
-      activa: [this.data?.activa ?? true]
+      activaVisual: [esActiva] 
     });
   }
 
@@ -66,7 +74,12 @@ private fb = inject(FormBuilder);
 
   onSave(): void {
     if (this.parcelaForm.valid) {
-      this.dialogRef.close(this.parcelaForm.value);
+        const val = this.parcelaForm.value;
+        const toSave = {
+            ...val,
+            anulado: !val.activaVisual
+        };
+        this.dialogRef.close(toSave);
     }
   }
 }

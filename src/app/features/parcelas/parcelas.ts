@@ -36,6 +36,12 @@ private parcelaService = inject(ParcelasService);
   public displayedColumns: string[] = ['nombre', 'variedad', 'finca', 'area', 'acciones'];
   public filtro = signal<string>('');
 
+  // Helper para nombre de Variedad (Ahora por ID)
+  getNombreVariedad(id: number): string {
+    const v = this.parcelaService.variedades().find(x => x.id === id);
+    return v ? v.nombre : 'Desconocida';
+  }
+  
   public parcelasFiltradas = computed(() => {
     const lista = this.parcelaService.parcelas();
     const txt = this.filtro().toLowerCase();
@@ -44,7 +50,7 @@ private parcelaService = inject(ParcelasService);
 
     return lista.filter(p => 
       p.nombre.toLowerCase().includes(txt) || 
-      p.variedad.toLowerCase().includes(txt)
+      p.variedadNombre?.toLowerCase().includes(txt)
     );
   });
 
