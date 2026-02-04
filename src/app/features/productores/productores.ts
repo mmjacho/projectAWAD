@@ -66,17 +66,25 @@ private productorService = inject(ProductoresService);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         if (result.id) {
-          this.productorService.updateProductor(result);
+          this.productorService.updateProductor(result).subscribe({
+            next: (res) => res.success ? alert('Actualizado') : alert(res.message),
+            error: () => alert('Error de conexión')
+          });
         } else {
-          this.productorService.addProductor(result);
+          this.productorService.addProductor(result).subscribe({
+            next: (res) => res.success ? alert('Creado') : alert(res.message),
+            error: () => alert('Error de conexión')
+          });
         }
       }
     });
   }
 
   eliminarProductor(id: number): void {
-    if (confirm('¿Eliminar este productor? (Advertencia: Esto podría afectar fincas asociadas)')) {
-      this.productorService.deleteProductor(id);
+    if (confirm('¿Eliminar este productor?')) {
+      this.productorService.deleteProductor(id).subscribe({
+        next: (res) => res.success ? alert('Eliminado') : alert(res.message)
+      });
     }
   }
 }

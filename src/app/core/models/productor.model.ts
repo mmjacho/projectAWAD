@@ -6,5 +6,5 @@ export interface Productor {
   email: string;
   telefono: string;
   direccion: string;
-  activo: boolean;
+  anulado: boolean;
 }
