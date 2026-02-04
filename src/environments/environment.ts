@@ -10,5 +10,7 @@ export const environment = {
   UrlServicioSetUsuario: API_BASE + API_PATH + '/Usuario/SetUsuarioTransaccion',
   UrlServicioGetRoles: API_BASE + API_PATH + '/Roles/GetRolesTransaccion',
   UrlServicioGetProductor: API_BASE + API_PATH + '/Productor/GetProductoresTransaccion',
-  UrlServicioSetProductor: API_BASE + API_PATH + '/Productor/SetProductorTransaccion'
+  UrlServicioSetProductor: API_BASE + API_PATH + '/Productor/SetProductorTransaccion',
+  UrlServicioGetFinca: API_BASE + API_PATH + '/Finca/GetFincasTransaccion',
+  UrlServicioSetFinca: API_BASE + API_PATH + '/Finca/SetFincaTransaccion'
 };

@@ -4,5 +4,5 @@ export interface Finca {
   ubicacion: string;
   hectareas: number;
   productorId: number; // Relación con el Productor
-  activa: boolean;
+  anulado: boolean;
 }

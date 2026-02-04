@@ -37,6 +37,12 @@ private fincaService = inject(FincasService);
   
   public filtro = signal<string>('');
 
+  constructor() {
+    if (this.productorService.productores().length === 0) {
+        this.productorService.loadProductores();
+    }
+  }
+
   public fincasFiltradas = computed(() => {
     const lista = this.fincaService.fincas();
     const filtroLower = this.filtro().toLowerCase();
@@ -69,17 +75,21 @@ private fincaService = inject(FincasService);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         if (result.id) {
-          this.fincaService.updateFinca(result);
+          this.fincaService.updateFinca(result).subscribe({
+            next: (res) => res.success ? alert('Actualizado') : alert(res.message)
+          });
         } else {
-          this.fincaService.addFinca(result);
+          this.fincaService.addFinca(result).subscribe({
+            next: (res) => res.success ? alert('Registrado') : alert(res.message)
+          });
         }
       }
     });
   }
 
   eliminarFinca(id: number): void {
-    if (confirm('¿Está seguro de eliminar esta finca?')) {
-      this.fincaService.deleteFinca(id);
+    if (confirm('¿Eliminar finca?')) {
+      this.fincaService.deleteFinca(id).subscribe();
     }
   }
 }
