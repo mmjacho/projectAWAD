@@ -2,23 +2,21 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Usuario } from '../../core/models/usuario.model';
+import { Rol } from '../../core/models/rol.model'; // Importar modelo Rol
 import { UsuarioRequest } from '../../core/requests/usuario.request';
 import { ApiResponse } from '../../core/response/api-response';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-// // Datos quemados
-// const MOCK_USUARIOS: Usuario[] = [
-//   { id: 1, nombre: 'Ana', apellido: 'García', email: 'ana.garcia@email.com', rol: 'Admin', activo: true },
-//   { id: 2, nombre: 'Luis', apellido: 'Martínez', email: 'luis.martinez@email.com', rol: 'Productor', activo: true },
-//   { id: 3, nombre: 'Sofía', apellido: 'Hernández', email: 'sofia.h@email.com', rol: 'Cliente', activo: false },
-//   { id: 4, nombre: 'Carlos', apellido: 'López', email: 'carlos.lopez@email.com', rol: 'Productor', activo: true },
-// ];
+interface RolesRequest { transaccion: string; }
 
 @Injectable({ providedIn: 'root' })
 export class UsuarioService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl; // Usa la URL centralizada
+
+  private _roles = signal<Rol[]>([]);
+  public readonly roles = this._roles.asReadonly();
 
   // Señal privada y pública de solo lectura
   private _usuarios = signal<Usuario[]>([]);
@@ -27,6 +25,7 @@ export class UsuarioService {
   constructor() {
     // Cargar usuarios al iniciar el servicio
     this.loadUsuarios();
+    this.loadRoles();
   }
 
   public loadUsuarios() {
@@ -45,6 +44,20 @@ export class UsuarioService {
     });
   }
 
+  public loadRoles() {
+    const url = environment.UrlServicioGetRoles;
+    const payload: RolesRequest = { transaccion: 'TRX_GET_ALL_ROLES' };
+
+    this.http.post<ApiResponse<Rol[]>>(url, payload).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this._roles.set(response.data);
+        }
+      },
+      error: (err) => console.error('Error cargando roles:', err)
+    });
+  }
+
   // Añadir usuario
   addUser(usuario: Usuario): Observable<ApiResponse<Usuario>> {
     const url = environment.UrlServicioSetUsuario;
@@ -55,12 +68,15 @@ export class UsuarioService {
       nombre: usuario.nombre,
       apellido: usuario.apellido,
       email: usuario.email,
-      rolId: this.mapRolToId(usuario.rol), // Método auxiliar para convertir rol string a ID
-      activo: usuario.activo,
-      // VALORES POR DEFECTO (Necesarios porque el SP los pide y no están en el form)
-      codigo: usuario.email.split('@')[0], 
-      cedula: '9999999999', 
-      contrasenia: '123456'
+      cedula: usuario.cedula,
+      codigo: usuario.codigo,
+      contrasenia: usuario.contrasenia, // Ahora sí se envía desde el form
+      rolId: usuario.rolId,
+      activo: !usuario.anulado,// Enviaremos el bool como espera tu lógica o ajustamos el request
+      anulado : usuario.anulado
+      // OJO: Tu Request backend tiene "Activo" o "Anulado"? 
+      // Si tu backend en UsuarioRequest tiene 'Anulado', envía 'anulado: usuario.anulado'.
+      // Si usaremos la lógica del form donde true es activo:
     };
 
     return this.http.post<ApiResponse<Usuario>>(url, payload).pipe(
@@ -79,12 +95,13 @@ export class UsuarioService {
       nombre: usuario.nombre,
       apellido: usuario.apellido,
       email: usuario.email,
-      rolId: this.mapRolToId(usuario.rol),
-      activo: usuario.activo,
-      // Mantener datos obligatorios del SP
-      codigo: usuario.email.split('@')[0],
-      cedula: '9999999999', 
-      contrasenia: '123456' 
+      cedula: usuario.cedula,
+      codigo: usuario.codigo,
+      contrasenia: usuario.contrasenia,
+      rolId: usuario.rolId,
+      // Si está activo (true) -> Anulado es false
+      activo: !usuario.anulado,
+      anulado : usuario.anulado
     };
 
     return this.http.post<ApiResponse<Usuario>>(url, payload).pipe(

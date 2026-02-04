@@ -38,22 +38,31 @@ export class UsuariosComponent {
   
   // Señales para el filtrado
   public filtro = signal<string>('');
+
+  // Método helper para la tabla
+  obtenerNombreRol(rolId: number): string {
+    const rolEncontrado = this.usuarioService.roles().find(r => r.id === rolId);
+    return rolEncontrado ? rolEncontrado.nombre : 'Desconocido';
+  }
   
   // Señal computada para filtrar usuarios
   public usuariosFiltrados = computed(() => {
     const usuarios = this.usuarioService.usuarios();
+    const roles = this.usuarioService.roles(); // Necesitamos los roles para filtrar por nombre de rol
     const filtroLower = this.filtro().toLowerCase();
 
     if (!filtroLower) {
       return usuarios;
     }
 
-    return usuarios.filter(u =>
-      u.nombre.toLowerCase().includes(filtroLower) ||
-      u.apellido.toLowerCase().includes(filtroLower) ||
-      u.email.toLowerCase().includes(filtroLower) ||
-      u.rol.toLowerCase().includes(filtroLower)
-    );
+    return usuarios.filter(u => {
+      const nombreRol = roles.find(r => r.id === u.rolId)?.nombre.toLowerCase() || '';
+      
+      return u.nombre.toLowerCase().includes(filtroLower) ||
+             u.apellido.toLowerCase().includes(filtroLower) ||
+             u.email.toLowerCase().includes(filtroLower) ||
+             nombreRol.includes(filtroLower);
+    });
   });
 
   // Método para el input de filtro

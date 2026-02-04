@@ -7,5 +7,6 @@ export const environment = {
   apiUrl: API_BASE + API_PATH,
   UrlServicioAutorizacion: API_BASE + API_PATH + '/Autorizacion/VerificarAutorizacion',
   UrlServicioGetUsuario: API_BASE + API_PATH + '/Usuario/GetUsuarioTransaccion',
-  UrlServicioSetUsuario: API_BASE + API_PATH + '/Usuario/SetUsuarioTransaccion'
+  UrlServicioSetUsuario: API_BASE + API_PATH + '/Usuario/SetUsuarioTransaccion',
+  UrlServicioGetRoles: API_BASE + API_PATH + '/Roles/GetRolesTransaccion'
 };

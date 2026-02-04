@@ -10,4 +10,6 @@ export interface UsuarioRequest {
   contrasenia?: string;
   rolId?: number; 
   activo?: boolean;
+  anulado?: boolean;
+
 }
