@@ -1,60 +1,86 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import { Bitacora } from '../../core/models/bitacora.model';
+import { Plaga } from '../../core/models/plaga.model';
+import { Labor } from '../../core/models/labor.model';
+import { ApiResponse } from '../../core/response/api-response';
+import { tap } from 'rxjs/operators';
 
-const MOCK_BITACORA: Bitacora[] = [
-  { 
-    id: 1, 
-    parcelaId: 1, 
-    fecha: new Date('2024-01-15'), 
-    tipo: 'LABOR', 
-    nombreEvento: 'Poda de Formación', 
-    severidad: null, 
-    notas: 'Se realizó poda en luna menguante.' 
-  },
-  { 
-    id: 2, 
-    parcelaId: 1, 
-    fecha: new Date('2024-02-10'), 
-    tipo: 'PLAGA', 
-    nombreEvento: 'Roya', 
-    severidad: 'MEDIA', 
-    notas: 'Detectado en hojas bajas. Se aplicó control orgánico.' 
-  },
-  { 
-    id: 3, 
-    parcelaId: 2, 
-    fecha: new Date('2024-02-12'), 
-    tipo: 'PLAGA', 
-    nombreEvento: 'Broca', 
-    severidad: 'ALTA', 
-    notas: 'Afectación del 40% del fruto. Requiere intervención inmediata.' 
-  }
-];
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class BitacorasService {
-  private _registros = signal<Bitacora[]>(MOCK_BITACORA);
-  private _nextId = signal(MOCK_BITACORA.length + 1);
-
+  private http = inject(HttpClient);
+  
+  // Datos principales
+  private _registros = signal<Bitacora[]>([]);
   public readonly registros = this._registros.asReadonly();
 
-  constructor() {}
+  // Catálogos
+  public _labores = signal<Labor[]>([]);
+  public readonly labores = this._labores.asReadonly();
 
-  addRegistro(registro: Omit<Bitacora, 'id'>) {
-    const nuevo = { ...registro, id: this._nextId() };
-    this._registros.update(lista => [nuevo, ...lista]); // Agregamos al inicio para ver lo reciente primero
-    this._nextId.update(id => id + 1);
+  public _plagas = signal<Plaga[]>([]);
+   public readonly plagas = this._plagas.asReadonly();
+
+  constructor() {
+    this.loadRegistros();
+    this.loadLabores();
+    this.loadPlagas();
   }
 
-  updateRegistro(actualizado: Bitacora) {
-    this._registros.update(lista =>
-      lista.map(r => (r.id === actualizado.id ? actualizado : r))
-    );
+  public loadLabores() {
+    const url = environment.UrlServicioGetLabor;
+    const payload = { transaccion: 'TRX_GET_ALL_LABORES' };
+    this.http.post<ApiResponse<Labor[]>>(url, payload).subscribe({
+      next: (res) => { if (res.success) this._labores.set(res.data); }
+    });
+  }
+
+  public loadPlagas() {
+    const url = environment.UrlServicioGetPlaga;
+    const payload = { transaccion: 'TRX_GET_ALL_PLAGAS' };
+    this.http.post<ApiResponse<Plaga[]>>(url, payload).subscribe({
+      next: (res) => { if (res.success) this._plagas.set(res.data); }
+    });
+  }
+
+  loadRegistros() {
+    const url = environment.UrlServicioGetBitacora;
+    this.http.post<ApiResponse<Bitacora[]>>(url, { transaccion: 'TRX_GET_ALL_BITACORA' })
+        .subscribe(res => { if(res.success) this._registros.set(res.data); });
+  }
+
+  addRegistro(item: Bitacora) {
+     const url = environment.UrlServicioSetBitacora;
+     const payload = { ...item, transaccion: 'TRX_INSERT_BITACORA' };
+     
+     return this.http.post<ApiResponse<Bitacora>>(url, payload).pipe(
+        tap((res) => {
+            if (res.success) this.loadRegistros(); 
+        })
+     );
+  }
+  
+  updateRegistro(item: Bitacora) {
+     const url = environment.UrlServicioSetBitacora;
+     const payload = { ...item, transaccion: 'TRX_UPDATE_BITACORA' };
+     
+     return this.http.post<ApiResponse<Bitacora>>(url, payload).pipe(
+        tap((res) => {
+            if (res.success) this.loadRegistros(); 
+        })
+     );
   }
 
   deleteRegistro(id: number) {
-    this._registros.update(lista => lista.filter(r => r.id !== id));
+     const url = environment.UrlServicioSetBitacora;
+     const payload = { id, transaccion: 'TRX_DELETE_BITACORA' };
+     
+     return this.http.post<ApiResponse<Bitacora>>(url, payload).pipe(
+        tap((res) => {
+            if (res.success) this.loadRegistros(); 
+        })
+     );
   }
 }

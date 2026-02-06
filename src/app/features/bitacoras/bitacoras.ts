@@ -76,15 +76,37 @@ private bitacoraService = inject(BitacorasService);
 
     ref.afterClosed().subscribe(res => {
       if (res) {
-        if (res.id) this.bitacoraService.updateRegistro(res);
-        else this.bitacoraService.addRegistro(res);
+        if (res.id) {
+          // ACTUALIZAR
+          this.bitacoraService.updateRegistro(res).subscribe({
+             next: (response) => {
+                 if(response.success) alert("Registro actualizado");
+                 else alert("Error: " + response.message);
+             },
+             error: () => alert("Error de conexión")
+          });
+        } else {
+          // CREAR
+          this.bitacoraService.addRegistro(res).subscribe({
+             next: (response) => {
+                 if(response.success) alert("Registro guardado");
+                 else alert("Error: " + response.message);
+             },
+             error: () => alert("Error de conexión")
+          });
+        }
       }
     });
   }
 
   eliminar(id: number) {
     if (confirm('¿Eliminar este registro de bitácora?')) {
-      this.bitacoraService.deleteRegistro(id);
+      this.bitacoraService.deleteRegistro(id).subscribe({
+         next: (response) => {
+             if(response.success) alert("Registro eliminado");
+             else alert("Error: " + response.message);
+         }
+      });
     }
   }
 }

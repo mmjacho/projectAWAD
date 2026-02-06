@@ -3,10 +3,10 @@ export type Severidad = 'BAJA' | 'MEDIA' | 'ALTA' | null;
 
 export interface Bitacora {
   id: number;
-  parcelaId: number;    // ¿Dónde ocurrió?
-  fecha: Date;          // ¿Cuándo?
-  tipo: TipoEvento;     // ¿Qué fue?
-  nombreEvento: string; // Ej: "Fertilización NPK", "Roya del Café"
-  severidad: Severidad; // Solo si es Plaga
+  parcelaId: number;
+  fecha: Date; // O string si viene ISO desde backend
+  tipo: TipoEvento;
+  nombreEvento: string;
+  severidad: Severidad;
   notas: string;
 }

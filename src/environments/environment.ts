@@ -15,5 +15,9 @@ export const environment = {
   UrlServicioSetFinca: API_BASE + API_PATH + '/Finca/SetFincaTransaccion',
   UrlServicioGetParcela: API_BASE + API_PATH + '/Parcela/GetParcelasTransaccion',
   UrlServicioSetParcela: API_BASE + API_PATH + '/Parcela/SetParcelaTransaccion',
-  UrlServicioGetVariedad: API_BASE + API_PATH + '/Variedad/GetVariedadesTransaccion'
+  UrlServicioGetVariedad: API_BASE + API_PATH + '/Variedad/GetVariedadesTransaccion',
+  UrlServicioGetBitacora: API_BASE + API_PATH + '/Bitacora/GetBitacorasTransaccion',
+  UrlServicioSetBitacora: API_BASE + API_PATH + '/Bitacora/SetBitacoraTransaccion',
+  UrlServicioGetLabor: API_BASE + API_PATH + '/Labor/GetLaborTransaccion',
+  UrlServicioGetPlaga: API_BASE + API_PATH + '/Plaga/GetPlagasTransaccion'
 };

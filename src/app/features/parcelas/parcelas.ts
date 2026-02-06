@@ -73,15 +73,45 @@ private parcelaService = inject(ParcelasService);
 
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
-        if (res.id) this.parcelaService.updateParcela(res);
-        else this.parcelaService.addParcela(res);
+        console.log("Datos a enviar:", res);
+        
+        if (res.id) {
+          // ACTUALIZAR: Agregamos .subscribe()
+          this.parcelaService.updateParcela(res).subscribe({
+            next: (response) => {
+                if(response.success) {
+                    alert("Parcela actualizada correctamente");
+                } else {
+                    alert("Error: " + response.message);
+                }
+            },
+            error: (err) => alert("Error de conexión al actualizar")
+          });
+        } else {
+          // CREAR: Agregamos .subscribe()
+          this.parcelaService.addParcela(res).subscribe({
+            next: (response) => {
+                if(response.success) {
+                    alert("Parcela registrada correctamente");
+                } else {
+                    alert("Error: " + response.message);
+                }
+            },
+            error: (err) => alert("Error de conexión al guardar")
+          });
+        }
       }
     });
   }
 
   eliminar(id: number): void {
     if (confirm('¿Borrar parcela?')) {
-      this.parcelaService.deleteParcela(id);
+      // ELIMINAR: También faltaba el .subscribe() aquí
+      this.parcelaService.deleteParcela(id).subscribe({
+        next: (res) => {
+             if(res.success) alert("Parcela eliminada");
+        }
+      });
     }
   }
 }

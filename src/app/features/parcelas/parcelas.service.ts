@@ -41,6 +41,7 @@ export class ParcelasService {
   }
 
   addParcela(parcela: Parcela): Observable<ApiResponse<Parcela>> {
+    
     const url = environment.UrlServicioSetParcela;
     const payload: ParcelaRequest = { // Asumiendo que creaste esta interfaz
       transaccion: 'TRX_INSERT_PARCELA',
@@ -51,6 +52,7 @@ export class ParcelasService {
       variedadId: parcela.variedadId,
       anulado: parcela.anulado
     };
+
     return this.http.post<ApiResponse<Parcela>>(url, payload).pipe(
       tap(res => { if (res.success) this.loadParcelas(); })
     );
