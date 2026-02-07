@@ -26,5 +26,7 @@ export const environment = {
   UrlServicioGetUnidades: API_BASE + API_PATH + '/Unidad/GetUnidadTransaccion',
   UrlServicioGetMovimientos: API_BASE + API_PATH + '/Inventario/GetMovimientosTransaccion',
   UrlServicioGetCliente: API_BASE + API_PATH + '/Cliente/GetClientesTransaccion',
-  UrlServicioSetCliente: API_BASE + API_PATH + '/Cliente/SetClienteTransaccion'
+  UrlServicioSetCliente: API_BASE + API_PATH + '/Cliente/SetClienteTransaccion',
+  UrlServicioGetPedido: API_BASE + API_PATH + '/Pedido/GetPedidosTransaccion',
+  UrlServicioSetPedido: API_BASE + API_PATH + '/Pedido/SetPedidoTransaccion',
 };
