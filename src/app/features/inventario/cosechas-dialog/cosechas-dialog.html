@@ -16,7 +16,7 @@
           <mat-select formControlName="parcelaId">
             @for (p of parcelaService.parcelas(); track p.id) {
                <!-- Filtramos solo parcelas activas -->
-               @if (p.anulado) {
+               @if (!p.anulado) {
                  <mat-option [value]="p.id">
                     {{ p.nombre }} - {{ p.variedadId }} 
                     <small class="text-muted">({{ getProductor(p.fincaId) }})</small>
@@ -40,10 +40,10 @@
             <div class="col-md-6">
                  <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Calidad / Clasificación</mat-label>
-                  <mat-select formControlName="calidad">
-                    <mat-option value="Primera">Primera (Exportación)</mat-option>
-                    <mat-option value="Segunda">Segunda (Consumo)</mat-option>
-                    <mat-option value="Descarte">Descarte / Pasilla</mat-option>
+                  <mat-select formControlName="calidadId">
+                      @for (c of inventarioService.calidades(); track c.id) {
+                          <mat-option [value]="c.id">{{ c.nombre }}</mat-option>
+                      }
                   </mat-select>
                 </mat-form-field>
             </div>
@@ -60,10 +60,10 @@
              <div class="col-md-4">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Unidad</mat-label>
-                  <mat-select formControlName="unidad">
-                    <mat-option value="qq">Quintales</mat-option>
-                    <mat-option value="kg">Kilos</mat-option>
-                    <mat-option value="lb">Libras</mat-option>
+                  <mat-select formControlName="unidadId">
+                      @for (u of inventarioService.unidades(); track u.id) {
+                          <mat-option [value]="u.id">{{ u.nombre }} ({{ u.codigo }})</mat-option>
+                      }
                   </mat-select>
                 </mat-form-field>
              </div>

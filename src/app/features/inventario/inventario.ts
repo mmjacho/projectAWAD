@@ -54,15 +54,18 @@ export class Inventario {
   }
 
   openCosecha() {
-    const ref = this.dialog.open(CosechasDialog, {
-      width: '700px',
-      panelClass: 'dialog-cafe'
-    });
+    const ref = this.dialog.open(CosechasDialog, { width: '700px', panelClass: 'dialog-cafe' });
 
     ref.afterClosed().subscribe(result => {
       if (result) {
-        // El servicio se encarga de todo (crear lote + crear movimiento)
-        this.inventarioService.registrarCosecha(result);
+        // Suscripción aquí
+        this.inventarioService.registrarCosecha(result).subscribe({
+            next: (res) => {
+                if(res.success) alert("Cosecha registrada con código: " + res.data?.codigo); // Opcional si devuelves data
+                else alert("Error: " + res.message);
+            },
+            error: () => alert("Error de conexión")
+        });
       }
     });
   }

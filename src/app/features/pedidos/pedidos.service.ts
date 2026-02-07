@@ -32,14 +32,15 @@ export class PedidosService {
     // 2. Descontar del Inventario (IMPORTANTE)
     // Recorremos los items y registramos una SALIDA por cada uno
     nuevoPedido.items.forEach(item => {
-      this.inventarioService.registrarMovimiento({
-        loteId: item.loteId,
-        fecha: pedido.fecha,
-        tipo: 'VENTA',
-        cantidad: item.cantidad,
-        esEntrada: false, // Resta stock
-        motivo: `Venta Factura ${numeroFactura}`
-      });
+      //SE COMENTA POR CAMBIOS EN INVENTARIO TO DO
+      // this.inventarioService.registrarMovimiento({
+      //   loteId: item.loteId,
+      //   fecha: pedido.fecha,
+      //   tipo: 'VENTA',
+      //   cantidad: item.cantidad,
+      //   esEntrada: false, // Resta stock
+      //   motivo: `Venta Factura ${numeroFactura}`
+      // });
     });
   }
 

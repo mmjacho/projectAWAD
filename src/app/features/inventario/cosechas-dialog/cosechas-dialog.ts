@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ParcelasService } from '../../parcelas/parcelas.service';
 import { ProductoresService } from '../../productores/productores.service';
+import { InventarioService } from '../inventario.service';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -33,6 +34,7 @@ export class CosechasDialog {
 private fb = inject(FormBuilder);
   public dialogRef = inject(MatDialogRef<CosechasDialog>);
   public parcelaService = inject(ParcelasService);
+  public inventarioService = inject(InventarioService);
   // Inyectamos finca/productor para resolver nombres solo visualmente
   // En una app real haríamos un join en backend
   private productorService = inject(ProductoresService); 
@@ -44,8 +46,11 @@ private fb = inject(FormBuilder);
       parcelaId: [null, Validators.required],
       fechaCosecha: [new Date(), Validators.required],
       cantidadInicial: [null, [Validators.required, Validators.min(0.1)]],
-      unidad: ['qq', Validators.required],
-      calidad: ['Primera', Validators.required],
+      
+      // IDs numéricos para enviar al backend
+      unidadId: [null, Validators.required], 
+      calidadId: [null, Validators.required],
+      
       notas: ['']
     });
   }
