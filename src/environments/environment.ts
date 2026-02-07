@@ -24,5 +24,7 @@ export const environment = {
   UrlServicioSetLote: API_BASE + API_PATH + '/Inventario/SetLoteTransaccion', // Usa TRX_INSERT_COSECHA
   UrlServicioGetCalidades: API_BASE + API_PATH + '/Calidad/GetCalidadTransaccion',
   UrlServicioGetUnidades: API_BASE + API_PATH + '/Unidad/GetUnidadTransaccion',
-  UrlServicioGetMovimientos: API_BASE + API_PATH + '/Inventario/GetMovimientosTransaccion'
+  UrlServicioGetMovimientos: API_BASE + API_PATH + '/Inventario/GetMovimientosTransaccion',
+  UrlServicioGetCliente: API_BASE + API_PATH + '/Cliente/GetClientesTransaccion',
+  UrlServicioSetCliente: API_BASE + API_PATH + '/Cliente/SetClienteTransaccion'
 };

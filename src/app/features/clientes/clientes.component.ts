@@ -32,19 +32,17 @@ export class ClientesComponent {
   private clienteService = inject(ClienteService);
   private dialog = inject(MatDialog);
 
-  public displayedColumns: string[] = ['id', 'ruc', 'razonSocial', 'email', 'telefono', 'tipo', 'acciones'];
+  public displayedColumns: string[] = ['ruc', 'razonSocial', 'email', 'telefono', 'tipo', 'acciones'];
   
   public filtro = signal<string>('');
   
   public clientesFiltrados = computed(() => {
-    const clientes = this.clienteService.clientes();
+    const lista = this.clienteService.clientes();
     const filtroLower = this.filtro().toLowerCase();
 
-    if (!filtroLower) {
-      return clientes;
-    }
+    if (!filtroLower) return lista;
 
-    return clientes.filter(c =>
+    return lista.filter(c =>
       c.ruc.toLowerCase().includes(filtroLower) ||
       c.razonSocial.toLowerCase().includes(filtroLower) ||
       c.email.toLowerCase().includes(filtroLower)
@@ -66,9 +64,23 @@ export class ClientesComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         if (result.id) {
-          this.clienteService.updateCliente(result);
+          // ACTUALIZAR (Subscribe al observable)
+          this.clienteService.updateCliente(result).subscribe({
+            next: (res) => {
+              if (res.success) alert('Cliente actualizado correctamente');
+              else alert('Error: ' + res.message);
+            },
+            error: () => alert('Error de conexión al actualizar')
+          });
         } else {
-          this.clienteService.addCliente(result);
+          // CREAR (Subscribe al observable)
+          this.clienteService.addCliente(result).subscribe({
+            next: (res) => {
+              if (res.success) alert('Cliente creado correctamente');
+              else alert('Error: ' + res.message);
+            },
+            error: () => alert('Error de conexión al crear')
+          });
         }
       }
     });
@@ -76,7 +88,13 @@ export class ClientesComponent {
 
   eliminarCliente(id: number): void {
     if (confirm('¿Está seguro de que desea eliminar este cliente?')) {
-      this.clienteService.deleteCliente(id);
+      this.clienteService.deleteCliente(id).subscribe({
+        next: (res) => {
+          if (res.success) alert('Cliente eliminado');
+          else alert('Error: ' + res.message);
+        },
+        error: () => alert('Error de conexión al eliminar')
+      });
     }
   }
 }
