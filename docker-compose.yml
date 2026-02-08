@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:latest
+    hostname: mssql
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "cas1001ja!"
+    ports:
+      - "1833:1433"
+
+  api:
+    image: agrocafeadminwebapi:latest
+    hostname: api
+    depends_on:
+      - mssql
+    ports:
+      - "7011:8080"
+  
+  frontend:
+    # Si tu docker-compose está en la carpeta raíz y el angular en una subcarpeta, usa: context: ./nombre-carpeta-angular
+    # Si el docker-compose está DENTRO de la carpeta de angular, usa: context: .
+    build: 
+      context: ./  
+      dockerfile: Dockerfile
+    hostname: frontend
+    ports:
+      - "7010:80" # Accederás a tu web por localhost:4200
+    depends_on:
+      - api

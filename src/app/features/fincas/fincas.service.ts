@@ -1,38 +1,72 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import { Finca } from '../../core/models/finca.model';
+import { FincaRequest } from '../../core/requests/finca.request';
+import { ApiResponse } from '../../core/response/api-response';
+import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
-// Datos quemados para pruebas
-const MOCK_FINCAS: Finca[] = [
-  { id: 1, nombre: 'La Esperanza', ubicacion: 'Manabí, Zona Alta', hectareas: 10.5, productorId: 1, activa: true },
-  { id: 2, nombre: 'El Cafetal', ubicacion: 'Loja, Vilcabamba', hectareas: 5.0, productorId: 2, activa: true },
-  { id: 3, nombre: 'San Antonio', ubicacion: 'El Oro, Zaruma', hectareas: 12.0, productorId: 1, activa: true },
-];
-
-
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class FincasService {
-  private _fincas = signal<Finca[]>(MOCK_FINCAS);
-  private _nextId = signal(MOCK_FINCAS.length + 1);
-
+  private http = inject(HttpClient);
+  
+  private _fincas = signal<Finca[]>([]);
   public readonly fincas = this._fincas.asReadonly();
 
-  constructor() {}
-
-  addFinca(finca: Omit<Finca, 'id'>) {
-    const nuevaFinca = { ...finca, id: this._nextId() };
-    this._fincas.update(lista => [...lista, nuevaFinca]);
-    this._nextId.update(id => id + 1);
+  constructor() {
+    this.loadFincas();
   }
 
-  updateFinca(fincaActualizada: Finca) {
-    this._fincas.update(lista =>
-      lista.map(f => (f.id === fincaActualizada.id ? fincaActualizada : f))
+  public loadFincas() {
+    const url = environment.UrlServicioGetFinca;
+    const payload: FincaRequest = { transaccion: 'TRX_GET_ALL_FINCAS' };
+
+    this.http.post<ApiResponse<Finca[]>>(url, payload).subscribe({
+      next: (res) => { if (res.success) this._fincas.set(res.data); },
+      error: (err) => console.error('Error:', err)
+    });
+  }
+
+  addFinca(finca: Finca): Observable<ApiResponse<Finca>> {
+    const url = environment.UrlServicioSetFinca;
+    const payload: FincaRequest = {
+      transaccion: 'TRX_INSERT_FINCA',
+      nombre: finca.nombre,
+      ubicacion: finca.ubicacion,
+      hectareas: finca.hectareas,
+      productorId: finca.productorId,
+      anulado: finca.anulado // false si es activa
+    };
+
+    return this.http.post<ApiResponse<Finca>>(url, payload).pipe(
+      tap(res => { if (res.success) this.loadFincas(); })
     );
   }
 
-  deleteFinca(id: number) {
-    this._fincas.update(lista => lista.filter(f => f.id !== id));
+  updateFinca(finca: Finca): Observable<ApiResponse<Finca>> {
+    const url = environment.UrlServicioSetFinca;
+    const payload: FincaRequest = {
+      transaccion: 'TRX_UPDATE_FINCA',
+      id: finca.id,
+      nombre: finca.nombre,
+      ubicacion: finca.ubicacion,
+      hectareas: finca.hectareas,
+      productorId: finca.productorId,
+      anulado: finca.anulado
+    };
+
+    return this.http.post<ApiResponse<Finca>>(url, payload).pipe(
+      tap(res => { if (res.success) this.loadFincas(); })
+    );
+  }
+
+  deleteFinca(id: number): Observable<ApiResponse<Finca>> {
+    const url = environment.UrlServicioSetFinca;
+    const payload: FincaRequest = { transaccion: 'TRX_DELETE_FINCA', id: id };
+    
+    return this.http.post<ApiResponse<Finca>>(url, payload).pipe(
+      tap(res => { if (res.success) this.loadFincas(); })
+    );
   }
 }

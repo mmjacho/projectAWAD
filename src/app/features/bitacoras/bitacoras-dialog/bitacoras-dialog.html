@@ -47,18 +47,11 @@
         <mat-form-field appearance="outline">
           <mat-label>{{ esPlaga() ? 'Nombre de la Plaga' : 'Nombre de la Labor' }}</mat-label>
           <mat-select formControlName="nombreEvento">
-             @if (esPlaga()) {
-                 <mat-option value="Roya">Roya (Hongo)</mat-option>
-                 <mat-option value="Broca">Broca (Insecto)</mat-option>
-                 <mat-option value="Ojo de Gallo">Ojo de Gallo</mat-option>
-                 <mat-option value="Minador">Minador de Hoja</mat-option>
-             } @else {
-                 <mat-option value="Siembra">Siembra</mat-option>
-                 <mat-option value="Fertilización">Fertilización</mat-option>
-                 <mat-option value="Poda">Poda</mat-option>
-                 <mat-option value="Deshierbe">Deshierbe / Limpieza</mat-option>
-                 <mat-option value="Cosecha">Cosecha</mat-option>
+             
+             @for (item of listaEventos(); track item.id) {
+                 <mat-option [value]="item.nombre">{{ item.nombre }}</mat-option>
              }
+
           </mat-select>
         </mat-form-field>
 

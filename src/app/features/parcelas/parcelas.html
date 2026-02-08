@@ -33,7 +33,7 @@
             <th mat-header-cell *matHeaderCellDef> Variedad </th>
             <td mat-cell *matCellDef="let p"> 
                <mat-chip-set>
-                 <mat-chip>{{p.variedad}}</mat-chip>
+                 <mat-chip>{{getNombreVariedad(p.variedadId)}}</mat-chip>
                </mat-chip-set>
             </td>
           </ng-container>

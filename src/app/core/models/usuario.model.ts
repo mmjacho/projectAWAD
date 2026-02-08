@@ -1,8 +1,11 @@
 export interface Usuario {
   id: number;
+  codigo: string;    
   nombre: string;
   apellido: string;
   email: string;
-  rol: 'Admin' | 'Productor' | 'Cliente';
-  activo: boolean;
+  cedula: string;     
+  contrasenia?: string; 
+  rolId: number;      // Cambiado de 'rol' string a ID numérico
+  anulado: boolean;   
 }

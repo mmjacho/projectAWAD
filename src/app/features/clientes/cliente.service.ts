@@ -1,38 +1,82 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import { Cliente } from '../../core/models/cliente.model';
-
-// Datos quemados
-const MOCK_CLIENTES: Cliente[] = [
-  { id: 1, ruc: '12345678901', razonSocial: 'Exportadora del Sur S.A.', email: 'compras@exposur.com', telefono: '0987654321', tipo: 'Nacional' },
-  { id: 2, ruc: '98765432101', razonSocial: 'Café de Montaña C.A.', email: 'gerencia@cafemontana.com', telefono: '0991234567', tipo: 'Nacional' },
-  { id: 3, ruc: '11122233345', razonSocial: 'Global Coffee Importers', email: 'buyer@globalcoffee.com', telefono: '+1555123456', tipo: 'Extranjero' },
-];
+import { ClienteRequest } from '../../core/requests/cliente.request';
+import { ApiResponse } from '../../core/response/api-response';
+import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ClienteService {
-  private _clientes = signal<Cliente[]>(MOCK_CLIENTES);
-  private _nextId = signal(MOCK_CLIENTES.length + 1);
-
+  private http = inject(HttpClient);
+  
+  // Señales
+  private _clientes = signal<Cliente[]>([]);
   public readonly clientes = this._clientes.asReadonly();
 
-  constructor() {}
-
-  // Añadir cliente
-  addCliente(cliente: Omit<Cliente, 'id'>) {
-    const nuevoCliente = { ...cliente, id: this._nextId() };
-    this._clientes.update(clientes => [...clientes, nuevoCliente]);
-    this._nextId.update(id => id + 1);
+  constructor() {
+    this.loadClientes();
   }
 
-  // Actualizar cliente
-  updateCliente(clienteActualizado: Cliente) {
-    this._clientes.update(clientes =>
-      clientes.map(c => (c.id === clienteActualizado.id ? clienteActualizado : c))
+  public loadClientes() {
+    const url = environment.UrlServicioGetCliente;
+    const payload: ClienteRequest = { transaccion: 'TRX_GET_ALL_CLIENTES' };
+
+    this.http.post<ApiResponse<Cliente[]>>(url, payload).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this._clientes.set(response.data);
+        }
+      },
+      error: (err) => console.error('Error cargando clientes:', err)
+    });
+  }
+
+  addCliente(cliente: Cliente): Observable<ApiResponse<Cliente>> {
+    const url = environment.UrlServicioSetCliente;
+    const payload: ClienteRequest = {
+      transaccion: 'TRX_INSERT_CLIENTE',
+      ruc: cliente.ruc,
+      razonSocial: cliente.razonSocial,
+      email: cliente.email,
+      telefono: cliente.telefono,
+      tipo: cliente.tipo,
+      anulado: false // Por defecto activo al crear
+    };
+
+    return this.http.post<ApiResponse<Cliente>>(url, payload).pipe(
+      tap(res => { if (res.success) this.loadClientes(); })
     );
   }
 
-  // Eliminar cliente
-  deleteCliente(id: number) {
-    this._clientes.update(clientes => clientes.filter(c => c.id !== id));
+  updateCliente(cliente: Cliente): Observable<ApiResponse<Cliente>> {
+    const url = environment.UrlServicioSetCliente;
+    const payload: ClienteRequest = {
+      transaccion: 'TRX_UPDATE_CLIENTE',
+      id: cliente.id,
+      ruc: cliente.ruc,
+      razonSocial: cliente.razonSocial,
+      email: cliente.email,
+      telefono: cliente.telefono,
+      tipo: cliente.tipo,
+      anulado: cliente.anulado
+    };
+
+    return this.http.post<ApiResponse<Cliente>>(url, payload).pipe(
+      tap(res => { if (res.success) this.loadClientes(); })
+    );
+  }
+
+  deleteCliente(id: number): Observable<ApiResponse<Cliente>> {
+    const url = environment.UrlServicioSetCliente;
+    const payload: ClienteRequest = {
+      transaccion: 'TRX_DELETE_CLIENTE',
+      id: id
+    };
+
+    return this.http.post<ApiResponse<Cliente>>(url, payload).pipe(
+      tap(res => { if (res.success) this.loadClientes(); })
+    );
   }
 }

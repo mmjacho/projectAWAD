@@ -24,7 +24,7 @@ import { MatChipsModule } from '@angular/material/chips';
   styleUrl: './pedidos.css',
 })
 export class Pedidos {
-public pedidoService = inject(PedidosService);
+  public pedidoService = inject(PedidosService);
   private clienteService = inject(ClienteService);
   private dialog = inject(MatDialog);
 
@@ -36,24 +36,27 @@ public pedidoService = inject(PedidosService);
   }
 
   openNuevaVenta() {
-    const ref = this.dialog.open(PedidosForm, {
-        width: '80vw', // Ocupa el 90% del ancho de la ventana
-        height: '80vh', // Ocupa el 90% del alto de la ventana
-        maxWidth: '100vw', // Permite que crezca hasta el borde si es necesario
-        panelClass: 'dialog-cafe',
-        disableClose: true // Evitar cierre accidental
-    });
+    const ref = this.dialog.open(PedidosForm, { width: '80vw', disableClose: true });
 
     ref.afterClosed().subscribe(res => {
         if (res) {
-            this.pedidoService.registrarPedido(res);
+            // SUSCRIPCIÓN AL OBSERVABLE
+            this.pedidoService.registrarPedido(res).subscribe({
+                next: (response) => {
+                    if (response.success) alert(`Venta generada: ${response.data.numeroFactura}`);
+                    else alert("Error: " + response.message);
+                },
+                error: (e) => alert("Error de conexión al guardar venta")
+            });
         }
     });
   }
 
   anular(id: number) {
-    if(confirm('¿Anular esta factura?')) {
-        this.pedidoService.anularPedido(id);
+    if(confirm('¿Anular esta factura? Se devolverá el stock.')) {
+       this.pedidoService.anularPedido(id).subscribe({
+           next: (res) => { if(res.success) alert("Factura anulada correctamente."); }
+       });
     }
   }
 }

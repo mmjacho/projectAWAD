@@ -36,13 +36,16 @@ private fb = inject(FormBuilder);
   protected fincaForm: FormGroup;
 
   constructor() {
+    // Si viene data, y anulado es true -> activaVisual es false
+    const esActiva = this.data ? !this.data.anulado : true;
+
     this.fincaForm = this.fb.group({
       id: [this.data?.id ?? null],
       nombre: [this.data?.nombre ?? '', Validators.required],
       ubicacion: [this.data?.ubicacion ?? '', Validators.required],
       hectareas: [this.data?.hectareas ?? 0, [Validators.required, Validators.min(0)]],
       productorId: [this.data?.productorId ?? null, Validators.required],
-      activa: [this.data?.activa ?? true]
+      activaVisual: [esActiva] // Control visual
     });
   }
 
@@ -52,7 +55,12 @@ private fb = inject(FormBuilder);
 
   onSave(): void {
     if (this.fincaForm.valid) {
-      this.dialogRef.close(this.fincaForm.value);
+      const formValue = this.fincaForm.value;
+      const fincaParaGuardar: Finca = {
+        ...formValue,
+        anulado: !formValue.activaVisual // Conversión inversa
+      };
+      this.dialogRef.close(fincaParaGuardar);
     }
   }
 }

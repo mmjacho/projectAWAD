@@ -1,7 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Bitacora, TipoEvento } from '../../../core/models/bitacora.model';
+import { BitacorasService } from '../bitacoras.service'; // Inyectamos el servicio propio
 import { ParcelasService } from '../../parcelas/parcelas.service';
 
 // Material
@@ -35,8 +36,15 @@ export class BitacorasDialog {
 private fb = inject(FormBuilder);
   public dialogRef = inject(MatDialogRef<BitacorasDialog>);
   public data: Bitacora | null = inject(MAT_DIALOG_DATA);
+  public bitacoraService = inject(BitacorasService);
   public parcelaService = inject(ParcelasService);
 
+  public listaEventos = computed(() => {
+     return this.esPlaga() 
+        ? this.bitacoraService.plagas() 
+        : this.bitacoraService.labores();
+  });
+  
   public form: FormGroup;
   // Signal para controlar la UI reactiva del tipo
   public esPlaga = signal(false);

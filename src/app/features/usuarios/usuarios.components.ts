@@ -38,22 +38,31 @@ export class UsuariosComponent {
   
   // Señales para el filtrado
   public filtro = signal<string>('');
+
+  // Método helper para la tabla
+  obtenerNombreRol(rolId: number): string {
+    const rolEncontrado = this.usuarioService.roles().find(r => r.id === rolId);
+    return rolEncontrado ? rolEncontrado.nombre : 'Desconocido';
+  }
   
   // Señal computada para filtrar usuarios
   public usuariosFiltrados = computed(() => {
     const usuarios = this.usuarioService.usuarios();
+    const roles = this.usuarioService.roles(); // Necesitamos los roles para filtrar por nombre de rol
     const filtroLower = this.filtro().toLowerCase();
 
     if (!filtroLower) {
       return usuarios;
     }
 
-    return usuarios.filter(u =>
-      u.nombre.toLowerCase().includes(filtroLower) ||
-      u.apellido.toLowerCase().includes(filtroLower) ||
-      u.email.toLowerCase().includes(filtroLower) ||
-      u.rol.toLowerCase().includes(filtroLower)
-    );
+    return usuarios.filter(u => {
+      const nombreRol = roles.find(r => r.id === u.rolId)?.nombre.toLowerCase() || '';
+      
+      return u.nombre.toLowerCase().includes(filtroLower) ||
+             u.apellido.toLowerCase().includes(filtroLower) ||
+             u.email.toLowerCase().includes(filtroLower) ||
+             nombreRol.includes(filtroLower);
+    });
   });
 
   // Método para el input de filtro
@@ -67,27 +76,43 @@ export class UsuariosComponent {
     const dialogRef = this.dialog.open(UsuarioDialogComponent, {
       width: '450px',
       panelClass: 'dialog-cafe',
-      data: usuario ? { ...usuario } : null, // Pasa una copia para evitar mutaciones
+      data: usuario ? { ...usuario } : null,
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         if (result.id) {
-          // Es una actualización
-          this.usuarioService.updateUser(result);
+          // ACTUALIZAR (Subscribe al observable)
+          this.usuarioService.updateUser(result).subscribe({
+            next: (res) => {
+              if (res.success) alert('Usuario actualizado correctamente');
+              else alert('Error: ' + res.message);
+            },
+            error: () => alert('Error de conexión al actualizar')
+          });
         } else {
-          // Es uno nuevo
-          this.usuarioService.addUser(result);
+          // CREAR (Subscribe al observable)
+          this.usuarioService.addUser(result).subscribe({
+            next: (res) => {
+              if (res.success) alert('Usuario creado correctamente');
+              else alert('Error: ' + res.message);
+            },
+            error: () => alert('Error de conexión al crear')
+          });
         }
       }
     });
   }
 
-  // Eliminar usuario
   eliminarUsuario(id: number): void {
-    // Aquí podrías agregar un diálogo de confirmación
     if (confirm('¿Está seguro de que desea eliminar este usuario?')) {
-      this.usuarioService.deleteUser(id);
+      this.usuarioService.deleteUser(id).subscribe({
+        next: (res) => {
+          if (res.success) alert('Usuario eliminado');
+          else alert('Error: ' + res.message);
+        },
+        error: () => alert('Error de conexión al eliminar')
+      });
     }
   }
 }

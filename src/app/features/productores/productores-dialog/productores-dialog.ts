@@ -25,8 +25,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
   templateUrl: './productores-dialog.html',
   styleUrl: './productores-dialog.css',
 })
+
 export class ProductoresDialog {
-// Angular 20: 'inject' es el estándar para dependencias
   private fb = inject(FormBuilder);
   public dialogRef = inject(MatDialogRef<ProductoresDialog>);
   public data: Productor | null = inject(MAT_DIALOG_DATA);
@@ -34,6 +34,9 @@ export class ProductoresDialog {
   protected productorForm: FormGroup;
 
   constructor() {
+    // Si viene data, Anulado=true significa Activo=false
+    const esActivo = this.data ? !this.data.anulado : true;
+
     this.productorForm = this.fb.group({
       id: [this.data?.id ?? null],
       cedula: [this.data?.cedula ?? '', Validators.required],
@@ -42,7 +45,7 @@ export class ProductoresDialog {
       email: [this.data?.email ?? '', [Validators.email]],
       telefono: [this.data?.telefono ?? '', Validators.required],
       direccion: [this.data?.direccion ?? '', Validators.required],
-      activo: [this.data?.activo ?? true, Validators.required],
+      activoVisual: [esActivo, Validators.required], // Control visual
     });
   }
 
@@ -52,7 +55,15 @@ export class ProductoresDialog {
 
   onSave(): void {
     if (this.productorForm.valid) {
-      this.dialogRef.close(this.productorForm.value);
+      const formValue = this.productorForm.value;
+      
+      const productorParaGuardar: Productor = {
+        ...formValue,
+        // Convertir ActivoVisual (true) a Anulado (false)
+        anulado: !formValue.activoVisual 
+      };
+
+      this.dialogRef.close(productorParaGuardar);
     }
   }
 }

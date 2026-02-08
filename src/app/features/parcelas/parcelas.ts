@@ -36,6 +36,12 @@ private parcelaService = inject(ParcelasService);
   public displayedColumns: string[] = ['nombre', 'variedad', 'finca', 'area', 'acciones'];
   public filtro = signal<string>('');
 
+  // Helper para nombre de Variedad (Ahora por ID)
+  getNombreVariedad(id: number): string {
+    const v = this.parcelaService.variedades().find(x => x.id === id);
+    return v ? v.nombre : 'Desconocida';
+  }
+  
   public parcelasFiltradas = computed(() => {
     const lista = this.parcelaService.parcelas();
     const txt = this.filtro().toLowerCase();
@@ -44,7 +50,7 @@ private parcelaService = inject(ParcelasService);
 
     return lista.filter(p => 
       p.nombre.toLowerCase().includes(txt) || 
-      p.variedad.toLowerCase().includes(txt)
+      p.variedadNombre?.toLowerCase().includes(txt)
     );
   });
 
@@ -67,15 +73,45 @@ private parcelaService = inject(ParcelasService);
 
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
-        if (res.id) this.parcelaService.updateParcela(res);
-        else this.parcelaService.addParcela(res);
+        console.log("Datos a enviar:", res);
+        
+        if (res.id) {
+          // ACTUALIZAR: Agregamos .subscribe()
+          this.parcelaService.updateParcela(res).subscribe({
+            next: (response) => {
+                if(response.success) {
+                    alert("Parcela actualizada correctamente");
+                } else {
+                    alert("Error: " + response.message);
+                }
+            },
+            error: (err) => alert("Error de conexión al actualizar")
+          });
+        } else {
+          // CREAR: Agregamos .subscribe()
+          this.parcelaService.addParcela(res).subscribe({
+            next: (response) => {
+                if(response.success) {
+                    alert("Parcela registrada correctamente");
+                } else {
+                    alert("Error: " + response.message);
+                }
+            },
+            error: (err) => alert("Error de conexión al guardar")
+          });
+        }
       }
     });
   }
 
   eliminar(id: number): void {
     if (confirm('¿Borrar parcela?')) {
-      this.parcelaService.deleteParcela(id);
+      // ELIMINAR: También faltaba el .subscribe() aquí
+      this.parcelaService.deleteParcela(id).subscribe({
+        next: (res) => {
+             if(res.success) alert("Parcela eliminada");
+        }
+      });
     }
   }
 }

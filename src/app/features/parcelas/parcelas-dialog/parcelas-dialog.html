@@ -39,13 +39,13 @@
             <!-- Variedad de Café -->
             <div class="col-md-6">
                 <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Variedad</mat-label>
-                  <mat-select formControlName="variedad" required>
-                    @for (v of variedades; track v) {
-                        <mat-option [value]="v">{{ v }}</mat-option>
-                    }
-                  </mat-select>
-                </mat-form-field>
+                <mat-label>Variedad</mat-label>
+                <mat-select formControlName="variedadId" required>
+                  @for (v of parcelaService.variedades(); track v.id) {
+                      <mat-option [value]="v.id">{{ v.nombre }}</mat-option>
+                  }
+                </mat-select>
+</mat-form-field>
             </div>
         </div>
 
@@ -60,7 +60,7 @@
           <textarea matInput formControlName="descripcion" rows="2" placeholder="Detalles adicionales..."></textarea>
         </mat-form-field>
 
-        <mat-slide-toggle formControlName="activa">
+        <mat-slide-toggle formControlName="activaVisual">
           Parcela en Producción
         </mat-slide-toggle>
 

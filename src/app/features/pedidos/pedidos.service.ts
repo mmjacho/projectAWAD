@@ -1,53 +1,64 @@
-import { Injectable, signal, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import { Pedido } from '../../core/models/pedido.model';
-import { InventarioService } from '../inventario/inventario.service';
+import { ApiResponse } from '../../core/response/api-response';
+import { tap } from 'rxjs/operators';
+import { InventarioService } from '../inventario/inventario.service'; // Para recargar stock al vender
 
-const MOCK_PEDIDOS: Pedido[] = [];
-
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class PedidosService {
-  private _pedidos = signal<Pedido[]>(MOCK_PEDIDOS);
+  private http = inject(HttpClient);
+  private inventarioService = inject(InventarioService); // Inyectamos para refrescar inventario
+
+  private _pedidos = signal<Pedido[]>([]);
   public readonly pedidos = this._pedidos.asReadonly();
-  
-  // Inyectamos inventario para descontar stock
-  private inventarioService = inject(InventarioService);
 
-  constructor() {}
+  constructor() {
+    this.loadPedidos();
+  }
 
-  registrarPedido(pedido: Omit<Pedido, 'id' | 'numeroFactura'>) {
-    const currentId = this._pedidos().length + 1;
-    const numeroFactura = `FAC-${new Date().getFullYear()}-${currentId.toString().padStart(4, '0')}`;
+  loadPedidos() {
+    const url = environment.UrlServicioGetPedido;
+    this.http.post<ApiResponse<Pedido[]>>(url, { transaccion: 'TRX_GET_ALL_PEDIDOS' })
+        .subscribe(res => { if(res.success) this._pedidos.set(res.data); });
+  }
 
-    const nuevoPedido: Pedido = {
-      ...pedido,
-      id: currentId,
-      numeroFactura
+  registrarPedido(pedido: any) {
+    const url = environment.UrlServicioSetPedido;
+    
+    // Armamos el objeto tal cual lo espera el backend (PedidoRequest)
+    // Nota: El backend espera 'Items' con mayúscula o según tu serializador, revisa eso.
+    const payload = { 
+        ...pedido, 
+        transaccion: 'TRX_INSERT_PEDIDO',
+        // Aseguramos que la fecha vaya en formato ISO
+        fecha: new Date(pedido.fecha).toISOString()
     };
 
-    // 1. Guardar el pedido
-    this._pedidos.update(lista => [nuevoPedido, ...lista]);
-
-    // 2. Descontar del Inventario (IMPORTANTE)
-    // Recorremos los items y registramos una SALIDA por cada uno
-    nuevoPedido.items.forEach(item => {
-      this.inventarioService.registrarMovimiento({
-        loteId: item.loteId,
-        fecha: pedido.fecha,
-        tipo: 'VENTA',
-        cantidad: item.cantidad,
-        esEntrada: false, // Resta stock
-        motivo: `Venta Factura ${numeroFactura}`
-      });
-    });
+    return this.http.post<ApiResponse<Pedido>>(url, payload).pipe(
+        tap(res => { 
+            if(res.success) {
+                this.loadPedidos(); // Recargar lista ventas
+                this.inventarioService.loadLotes(); // Recargar stock (bajó por la venta)
+                this.inventarioService.loadMovimientos(); // Recargar kardex
+            }
+        })
+    );
   }
 
   anularPedido(id: number) {
-    // Aquí iría la lógica para devolver el stock (Entrada por anulación)
-    // Por simplicidad solo cambiamos el estado
-    this._pedidos.update(lista => 
-      lista.map(p => p.id === id ? { ...p, estado: 'ANULADO' } : p)
+    const url = environment.UrlServicioSetPedido;
+    const payload = { id, transaccion: 'TRX_ANULAR_PEDIDO' };
+
+    return this.http.post<ApiResponse<Pedido>>(url, payload).pipe(
+        tap(res => { 
+            if(res.success) {
+                this.loadPedidos();
+                this.inventarioService.loadLotes(); // El stock sube al anular
+                this.inventarioService.loadMovimientos();
+            }
+        })
     );
   }
 }

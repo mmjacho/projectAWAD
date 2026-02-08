@@ -5,4 +5,5 @@ export interface Cliente {
   email: string;
   telefono: string;
   tipo: 'Nacional' | 'Extranjero';
+  anulado: boolean; // Coincide con backend
 }
