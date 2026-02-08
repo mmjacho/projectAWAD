@@ -1,4 +1,4 @@
-const API_BASE = 'https://localhost:7091';
+const API_BASE = 'http://localhost:7011';
 const API_PATH = '/api';
 
 export const environment = {
